@@ -23,6 +23,21 @@ library(ggplot2)
 library(dplyr)
 library(zoo)
 ```
+
+
+```{r}
+umsatzdaten <- read_csv("umsatzdaten_gekuerzt.csv")
+```
+Erstellung der Variable mit Wochentag
+```{r}
+# Berechnung der Wochentage
+umsatzdaten$wochentag <- weekdays(umsatzdaten$Datum)
+
+# Umwandlung von 'wochentag" in eine Faktor-Variable mit einer vorgegeben Sortierung der Level (Kategorien)
+umsatzdaten$wochentag <- factor(umsatzdaten$wochentag, levels=c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
+
+```
+
 Erstellung der Variable mit Jahreszeit
 ```{r}
 # Berechnung der Jahresqrt
