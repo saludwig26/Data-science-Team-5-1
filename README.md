@@ -1,5 +1,16 @@
 # Data-science-Team-5
 
-Es funktioniert!
+Wochentag
+Feiertage 
+Langes Wochendende Vorher und nachher
+Feiertag am Wochenende
 
-manuel
+hat der Bäcker an manchen Tagen geschlossen = kein Umsatz
+Vorher/nachher mehr umsatz 
+
+Kieler Woche 
+
+Wetter 
+Wetter am Wochende Einfluss auf Umsatz am Freitag ?
+
+Schulferien 
