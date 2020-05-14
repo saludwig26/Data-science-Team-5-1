@@ -1,0 +1,36 @@
+---
+title: "Project"
+author: "Manuel Alejandro"
+date: "5/14/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+
+```{r}
+library(readr)
+library(lubridate)
+library(ggplot2)
+library(dplyr)
+library(zoo)
+```
+Erstellung der Variable mit Jahreszeit
+```{r}
+# Berechnung der Jahresqrt
+yq <- as.yearqtr(as.yearmon(umsatzdaten$Datum, "%m/%d/%Y") + 1/12)
+# Berechnung der Jahreszeit
+umsatzdaten$jahreszeit <- factor(format(yq, "%q"), levels = 1:4, 
+      labels = c("Winter", "Frueling", "Sommer", "Herbst"))
+
+```
+
+
