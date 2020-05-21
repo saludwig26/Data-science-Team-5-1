@@ -52,4 +52,13 @@ umsatzdaten$jahreszeit <- factor(format(yq, "%q"), levels = 1:4,
 
 ```
 
+Erstellung der Variable mit Feiertage 
+```{r}
 
+```
+
+Langes Wochendende Vorher und nachher
+Feiertag am Wochenende
+```{r}
+
+```
