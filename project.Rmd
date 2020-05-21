@@ -74,5 +74,12 @@ Vorher/nachher mehr umsatz
 
 Schulferien
 ```{r}
-AshWednesday()
+AshWednesday() #Funktion für Ferien in Deutschland
+#Ferien
 ```
+
+Kieler Woche
+```{r}
+
+```
+
