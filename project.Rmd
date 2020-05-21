@@ -8,7 +8,7 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
-Sabrina
+
 ```
 
 
@@ -30,7 +30,7 @@ library(zoo)
 
 
 ```{r}
-umsatzdaten <- read_csv("umsatzdaten_gekuerzt.csv")
+umsatzdaten <- read.csv("umsatzdaten_gekuerzt.csv")
 ```
 Erstellung der Variable mit Wochentag
 ```{r}
@@ -50,10 +50,13 @@ yq <- as.yearqtr(as.yearmon(umsatzdaten$Datum, "%m/%d/%Y") + 1/12)
 umsatzdaten$jahreszeit <- factor(format(yq, "%q"), levels = 1:4, 
       labels = c("Winter", "Frueling", "Sommer", "Herbst"))
 
+
 ```
 
 Erstellung der Variable mit Feiertage 
 ```{r}
+library(timeDate)
+
 
 ```
 
@@ -61,4 +64,15 @@ Langes Wochendende Vorher und nachher
 Feiertag am Wochenende
 ```{r}
 
+```
+
+hat der Bäcker an manchen Tagen geschlossen = kein Umsatz
+Vorher/nachher mehr umsatz 
+```{r}
+
+```
+
+Schulferien
+```{r}
+AshWednesday()
 ```
