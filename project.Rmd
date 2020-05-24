@@ -30,7 +30,7 @@ library(zoo)
 
 
 ```{r}
-umsatzdaten <- read.csv("umsatzdaten_gekuerzt.csv")
+umsatzdaten <- read_csv("umsatzdaten_gekuerzt.csv")
 ```
 Erstellung der Variable mit Wochentag
 ```{r}
@@ -55,9 +55,18 @@ umsatzdaten$jahreszeit <- factor(format(yq, "%q"), levels = 1:4,
 
 Erstellung der Variable mit Feiertage 
 ```{r}
-library(timeDate)
+#Einbinden der Bibliothek mit dr Funktion isHoliday:
+library(RQuantLib)
 
+#Zeige deutsche Feiertage an:
+getHolidayList("Germany", as.Date("2013-01-01"), as.Date("2020-01-01"))
 
+#Füge die Feiertage "Himmelfahrt", "Pfingsten", "Tag deutscher Einheit" und "Reformationstag" zwischen 2013 und 2022 hinzu:
+further_holidays <- (as.Date(c("2013-10-03", "2014-10-03", "2015-10-03", "2016-10-03", "2017-10-03", "2018-10-03", "2019-10-03", "2020-10-03", "2021-10-03", "2017-10-31", "2018-10-31", "2019-10-31", "2020-10-31", "2021-10-31", "2022-10-31", "2013-05-09", "2014-05-29", "2015-05-14", "2016-05-05", "2017-05-25", "2018-05-10", "2019-05-30", "2020-05-21", "2021-05-13", "2022-05-26", "2013-05-20", "2014-06-09", "2015-05-25", "2016-05-16", "2017-06-05", "2018-05-21", "2019-06-10", "2020-06-01", "2021-05-24", "2022-06-06", "2013-12-26", "2014-12-26", "2015-12-26", "2016-12-26", "2017-12-26", "2018-12-26", "2019-12-26", "2020-12-26", "2021-12-26", "2022-12-26")))
+addHolidays("Germany", further_holidays)
+
+#Erstelle neue Spalte mit dem Wert für Feiertag (Wochenenden ausgenommen):
+umsatzdaten$holiday <- isHoliday("Germany", umsatzdaten$Datum) & !isWeekend("Germany", umsatzdaten$Datum)
 ```
 
 Langes Wochendende Vorher und nachher
