@@ -96,12 +96,6 @@ View(daten)
 ```
 
 
-
-
-
-```
-
-
 Einbindung Wetterdaten
 ```{r}
 library(readr)
@@ -116,4 +110,89 @@ View(daten_mit_wetter)
 
 
 ```
+
+
+Overfitting with linear regression
+ToDo: Noch updaten!!
+Importing Function Packages
+```
+```{r}
+library(dplyr)
+library(readr)
+library(lubridate)
+library(broom)
+library(Metrics)
+```
+
+Importing Training and Test Data
+ToDo: Links noch updaten!!
+```{r}
+baecker_umsatzdaten_train <- read_csv("https://raw.githubusercontent.com/opencampus-sh/sose20-datascience/master/house_pricing_train.csv")
+baecker_umsatzdaten_test <- read_csv("https://raw.githubusercontent.com/opencampus-sh/sose20-datascience/master/house_pricing_test.csv")
+```
+
+Estimating (Training) Models
+```{r}
+mod1 <- lm(price ~ bathrooms, house_pricing_train)
+mod2 <- lm(price ~ as.factor(bathrooms), house_pricing_train)
+mod3 <- lm(price ~ as.factor(bathrooms) + as.factor(zipcode), house_pricing_train)
+mod4 <- lm(price ~ as.factor(bathrooms) + as.factor(zipcode) + condition, house_pricing_train)
+mod5 <- lm(price ~ as.factor(bathrooms) + as.factor(zipcode) + as.factor(condition), house_pricing_train)
+mod6 <- lm(price ~ as.factor(bathrooms) + as.factor(zipcode) + as.factor(condition) + sqft_living15, house_pricing_train)
+mod7 <- lm(price ~ as.factor(bathrooms) + as.factor(zipcode) + as.factor(condition) + sqft_living15 + floors + view + grade + as.factor(zipcode)*as.factor(bathrooms), house_pricing_train)
+```
+
+
+```{r}
+summary(mod1)
+```
+
+```{r}
+glance(mod1)
+```
+
+Preparation of Model Results
+```{r}
+rbind(glance(mod1), glance(mod2), glance(mod3), glance(mod4), glance(mod5), glance(mod6), glance(mod7))
+```
+
+Model Prediction Quality for the Training Data Using the Mean Absolute Error
+```{r}
+rbind(mae(house_pricing_train$price, predict(mod1)),
+      mae(house_pricing_train$price, predict(mod2)),
+      mae(house_pricing_train$price, predict(mod3)),
+      mae(house_pricing_train$price, predict(mod4)),
+      mae(house_pricing_train$price, predict(mod5)),
+      mae(house_pricing_train$price, predict(mod6)),
+      mae(house_pricing_train$price, predict(mod7)))
+```
+
+
+Model Prediction Quality for the Training Data Using the Mean Absolute Percentage Error
+```{r}
+rbind(mape(house_pricing_train$price, predict(mod1)),
+      mape(house_pricing_train$price, predict(mod2)),
+      mape(house_pricing_train$price, predict(mod3)),
+      mape(house_pricing_train$price, predict(mod4)),
+      mape(house_pricing_train$price, predict(mod5)),
+      mape(house_pricing_train$price, predict(mod6)),
+      mape(house_pricing_train$price, predict(mod7)))
+```
+
+Model Prediction Quality for the (Unknown) Test Data Using the Mean Absolute Percentage Error
+```{r}
+rbind(mape(house_pricing_test$price, predict(mod1, newdata=house_pricing_test)),
+      mape(house_pricing_test$price, predict(mod2, newdata=house_pricing_test)),
+      mape(house_pricing_test$price, predict(mod3, newdata=house_pricing_test)),
+      mape(house_pricing_test$price, predict(mod4, newdata=house_pricing_test)),
+      mape(house_pricing_test$price, predict(mod5, newdata=house_pricing_test)),
+      mape(house_pricing_test$price, predict(mod6, newdata=house_pricing_test)),
+      mape(house_pricing_test$price, predict(mod7, newdata=house_pricing_test)))
+
+
+```
+
+
+
+
 
