@@ -111,10 +111,6 @@ View(daten_mit_wetter)
 
 ```
 
-Datensatz in Training und Test Data teilen
-```{r}
-
-```
 
 
 Overfitting with linear regression
@@ -127,6 +123,32 @@ library(readr)
 library(lubridate)
 library(broom)
 library(Metrics)
+```
+
+Datensatz in Training und Test Data teilen
+https://duttashi.github.io/blog/splitting-a-data-frame-into-training-and-testing-sets-in-r/
+```{r}
+# To set a seed use the function set.seed()
+set.seed(123)
+library(caTools)
+#70% training and 30% testing data
+# umsatzdaten$spl will create a new column in the umsatzdaten dataset.</code>
+umsatzdaten$spl=sample.split(umsatzdaten,SplitRatio=0.7)
+
+View(umsatzdaten)
+#Training data set
+train=subset(umsatzdaten, umsatzdaten$spl==TRUE)
+# where <i>spl== TRUE</i> means to add only those rows that have value true for spl in the training dataframe
+
+# you will see that this dataframe has all values where umsatzdaten$spl==TRUE
+View(train)
+
+#Similarly, to create the testing dataset,
+test=subset(umsatzdaten, umsatzdaten$spl==FALSE) 
+View(test)
+#where <i>spl== FALSE </i> means to add only those rows that have value true for spl in the training dataframe
+
+> View(test)  you will see that this dataframe has all values where iris$spl==FALSE
 ```
 
 Importing Training and Test Data
