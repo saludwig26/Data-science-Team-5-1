@@ -78,8 +78,42 @@ AshWednesday() #Funktion für Ferien in Deutschland
 #Ferien
 ```
 
-Kieler Woche
+
+Kieler Woche:
+1. Einbinden benötigter Bibliotheken
+2. Einlesen der Daten
+3. Zusammenführen der Daten
 ```{r}
+library(readr)
+library(dplyr)
+
+umsatzdaten <- read_csv("umsatzdaten_gekuerzt.csv")
+kiwo <- read_csv("kiwo.csv")
+
+
+daten_mit_kiwo <- left_join(umsatzdaten, kiwo)
+View(daten)
+```
+
+
+
+
+
+```
+
+
+Einbindung Wetterdaten
+```{r}
+library(readr)
+library(dplyr)
+
+wetter <- read_csv("wetter.csv")
+View(wetter)
+
+daten_mit_wetter<- left_join(umsatzdaten, wetter)
+View(daten_mit_wetter)
+
+
 
 ```
 
