@@ -111,6 +111,11 @@ View(daten_mit_wetter)
 
 ```
 
+Datensatz in Training und Test Data teilen
+```{r}
+
+```
+
 
 Overfitting with linear regression
 ToDo: Noch updaten!!
