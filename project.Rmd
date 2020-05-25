@@ -56,6 +56,7 @@ umsatzdaten$jahreszeit <- factor(format(yq, "%q"), levels = 1:4,
 Erstellung der Variable mit Feiertage 
 ```{r}
 #Einbinden der Bibliothek mit dr Funktion isHoliday:
+detach("package:timeDate", unload = TRUE)
 library(RQuantLib)
 
 #Zeige deutsche Feiertage an:
@@ -67,6 +68,7 @@ addHolidays("Germany", further_holidays)
 
 #Erstelle neue Spalte mit dem Wert für Feiertag (Wochenenden ausgenommen):
 umsatzdaten$holiday <- isHoliday("Germany", umsatzdaten$Datum) & !isWeekend("Germany", umsatzdaten$Datum)
+
 ```
 
 Langes Wochendende Vorher und nachher
@@ -78,6 +80,17 @@ Feiertag am Wochenende
 hat der Bäcker an manchen Tagen geschlossen = kein Umsatz
 Vorher/nachher mehr umsatz 
 ```{r}
+detach("package:RQuantLib", unload = TRUE)
+library(timeDate)
+all_dates <- tibble(Datum = as.Date(timeSequence(as.Date("2013-07-01"),as.Date("2019-06-03"))))
+
+missing_dates <- anti_join(all_dates, umsatzdaten)
+
+
+detach("package:timeDate", unload = TRUE)
+library(RQuantLib)
+missing_dates$holiday <- isHoliday("Germany", missing_dates$Datum)
+missing_dates$Wochentag <- !isWeekend("Germany", missing_dates$Datum)
 
 ```
 
