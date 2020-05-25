@@ -42,6 +42,11 @@ umsatzdaten$wochentag <- factor(umsatzdaten$wochentag, levels=c("Monday", "Tuesd
 
 ```
 
+Alle Warengruppen eines Tages zusammen fügen
+```{r}
+
+```
+
 Erstellung der Variable mit Jahreszeit
 ```{r}
 # Berechnung der Jahresqrt
@@ -69,6 +74,7 @@ addHolidays("Germany", further_holidays)
 #Erstelle neue Spalte mit dem Wert für Feiertag (Wochenenden ausgenommen):
 umsatzdaten$holiday <- isHoliday("Germany", umsatzdaten$Datum) & !isWeekend("Germany", umsatzdaten$Datum)
 
+View(umsatzdaten)
 ```
 
 Langes Wochendende Vorher und nachher
@@ -90,7 +96,7 @@ missing_dates <- anti_join(all_dates, umsatzdaten)
 detach("package:timeDate", unload = TRUE)
 library(RQuantLib)
 missing_dates$holiday <- isHoliday("Germany", missing_dates$Datum)
-missing_dates$Wochentag <- !isWeekend("Germany", missing_dates$Datum)
+missing_dates$WochentagMoFr <- !isWeekend("Germany", missing_dates$Datum)
 
 ```
 
@@ -109,12 +115,12 @@ Kieler Woche:
 library(readr)
 library(dplyr)
 
-umsatzdaten <- read_csv("umsatzdaten_gekuerzt.csv")
+#umsatzdaten <- read_csv("umsatzdaten_gekuerzt.csv")
 kiwo <- read_csv("kiwo.csv")
 
 
-daten_mit_kiwo <- left_join(umsatzdaten, kiwo)
-View(daten)
+umsatzdaten <- left_join(umsatzdaten, kiwo)
+View(umsatzdaten)
 ```
 
 
@@ -126,8 +132,8 @@ library(dplyr)
 wetter <- read_csv("wetter.csv")
 View(wetter)
 
-daten_mit_wetter<- left_join(umsatzdaten, wetter)
-View(daten_mit_wetter)
+umsatzdaten<- left_join(umsatzdaten, wetter)
+View(umsatzdaten)
 
 
 
@@ -181,23 +187,42 @@ baecker_umsatzdaten_test <- read_csv("https://raw.githubusercontent.com/opencamp
 ```
 
 Estimating (Training) Models
+
+(Alle Warengruppen getrennt anschauen)
 ```{r}
-mod1 <- lm(price ~ bathrooms, house_pricing_train)
-mod2 <- lm(price ~ as.factor(bathrooms), house_pricing_train)
-mod3 <- lm(price ~ as.factor(bathrooms) + as.factor(zipcode), house_pricing_train)
-mod4 <- lm(price ~ as.factor(bathrooms) + as.factor(zipcode) + condition, house_pricing_train)
-mod5 <- lm(price ~ as.factor(bathrooms) + as.factor(zipcode) + as.factor(condition), house_pricing_train)
-mod6 <- lm(price ~ as.factor(bathrooms) + as.factor(zipcode) + as.factor(condition) + sqft_living15, house_pricing_train)
-mod7 <- lm(price ~ as.factor(bathrooms) + as.factor(zipcode) + as.factor(condition) + sqft_living15 + floors + view + grade + as.factor(zipcode)*as.factor(bathrooms), house_pricing_train)
+mod1 <- lm(Umsatz ~ wochentag, umsatzdaten)
+mod2 <- lm(Umsatz ~ as.factor(Warengruppe), umsatzdaten)
+mod3 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag), umsatzdaten)
+mod4 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche, umsatzdaten)
+
+mod5 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur, umsatzdaten)
+mod6 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+holiday, umsatzdaten) 
+mod7 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+holiday+as.factor(jahreszeit), umsatzdaten) #Fehler
+
+mod8 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+holiday+Bewoelkung, umsatzdaten) 
+
+mod4 <- lm(Umsatz ~ as.factor(bathrooms) + as.factor(zipcode) + condition, umsatzdaten)
+mod5 <- lm(Umsatz ~ as.factor(bathrooms) + as.factor(zipcode) + as.factor(condition), umsatzdaten)
+mod6 <- lm(Umsatz ~ as.factor(bathrooms) + as.factor(zipcode) + as.factor(condition) + sqft_living15, house_pricing_train)
+mod7 <- lm(Umsatz ~ as.factor(bathrooms) + as.factor(zipcode) + as.factor(condition) + sqft_living15 + floors + view + grade + as.factor(zipcode)*as.factor(bathrooms), house_pricing_train)
 ```
 
 
 ```{r}
 summary(mod1)
+summary(mod2)
+summary(mod3)
+summary(mod4)
+summary(mod5)
+summary(mod6)
+summary(mod7)
+summary(mod8)
 ```
 
 ```{r}
+
 glance(mod1)
+glance(mod2)
 ```
 
 Preparation of Model Results
