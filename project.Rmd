@@ -201,10 +201,6 @@ mod7 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ T
 
 mod8 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+holiday+Bewoelkung, umsatzdaten) 
 
-mod4 <- lm(Umsatz ~ as.factor(bathrooms) + as.factor(zipcode) + condition, umsatzdaten)
-mod5 <- lm(Umsatz ~ as.factor(bathrooms) + as.factor(zipcode) + as.factor(condition), umsatzdaten)
-mod6 <- lm(Umsatz ~ as.factor(bathrooms) + as.factor(zipcode) + as.factor(condition) + sqft_living15, house_pricing_train)
-mod7 <- lm(Umsatz ~ as.factor(bathrooms) + as.factor(zipcode) + as.factor(condition) + sqft_living15 + floors + view + grade + as.factor(zipcode)*as.factor(bathrooms), house_pricing_train)
 ```
 
 
