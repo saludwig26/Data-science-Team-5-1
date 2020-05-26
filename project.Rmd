@@ -173,10 +173,11 @@ train=subset(umsatzdaten, umsatzdaten$spl==TRUE)
 
 # you will see that this dataframe has all values where umsatzdaten$spl==TRUE
 View(train)
-
+write.csv(train,"https://github.com/saludwig26/Data-science-Team-5-1\\train.csv", row.names = TRUE)
 #Similarly, to create the testing dataset,
 test=subset(umsatzdaten, umsatzdaten$spl==FALSE) 
 View(test)
+write.csv(train,"https://github.com/saludwig26/Data-science-Team-5-1\\test.csv", row.names = TRUE)
 #where <i>spl== FALSE </i> means to add only those rows that have value true for spl in the training dataframe
 
 #> View(test) # you will see that this dataframe has all values where iris$spl==FALSE
@@ -184,6 +185,7 @@ View(test)
 
 Importing Training and Test Data
 ToDo: Links noch updaten!!
+
 ```{r}
 baecker_umsatzdaten_train <- read_csv("https://raw.githubusercontent.com/opencampus-sh/sose20-datascience/master/house_pricing_train.csv")
 baecker_umsatzdaten_test <- read_csv("https://raw.githubusercontent.com/opencampus-sh/sose20-datascience/master/house_pricing_test.csv")
