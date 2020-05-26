@@ -8,7 +8,6 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
-
 ```
 
 
@@ -81,6 +80,9 @@ Langes Wochendende Vorher und nachher
 Feiertag am Wochenende
 ```{r}
 
+
+
+
 ```
 
 hat der Bäcker an manchen Tagen geschlossen = kein Umsatz
@@ -139,12 +141,10 @@ View(umsatzdaten)
 
 ```
 
-
-
-Overfitting with linear regression
+```Overfitting with linear regression
 ToDo: Noch updaten!!
 Importing Function Packages
-```
+
 ```{r}
 library(dplyr)
 library(readr)
@@ -155,13 +155,16 @@ library(Metrics)
 
 Datensatz in Training und Test Data teilen
 https://duttashi.github.io/blog/splitting-a-data-frame-into-training-and-testing-sets-in-r/
+
+
 ```{r}
+library(caTools)
 # To set a seed use the function set.seed()
 set.seed(123)
-library(caTools)
+
 #70% training and 30% testing data
 # umsatzdaten$spl will create a new column in the umsatzdaten dataset.</code>
-umsatzdaten$spl=sample.split(umsatzdaten,SplitRatio=0.7)
+umsatzdaten$spl=sample.split(umsatzdaten$Datum,SplitRatio=0.7)
 
 View(umsatzdaten)
 #Training data set
@@ -176,7 +179,7 @@ test=subset(umsatzdaten, umsatzdaten$spl==FALSE)
 View(test)
 #where <i>spl== FALSE </i> means to add only those rows that have value true for spl in the training dataframe
 
-> View(test)  you will see that this dataframe has all values where iris$spl==FALSE
+#> View(test) # you will see that this dataframe has all values where iris$spl==FALSE
 ```
 
 Importing Training and Test Data
@@ -197,7 +200,7 @@ mod4 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche, u
 
 mod5 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur, umsatzdaten)
 mod6 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+holiday, umsatzdaten) 
-mod7 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+holiday+as.factor(jahreszeit), umsatzdaten) #Fehler
+#mod7 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+holiday+as.factor(jahreszeit), umsatzdaten) #Fehler
 
 mod8 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+holiday+Bewoelkung, umsatzdaten) 
 
@@ -206,12 +209,14 @@ mod8 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ T
 
 ```{r}
 summary(mod1)
+plot(mod1)
 summary(mod2)
+plot(mod2)
 summary(mod3)
 summary(mod4)
 summary(mod5)
 summary(mod6)
-summary(mod7)
+#summary(mod7)
 summary(mod8)
 ```
 
