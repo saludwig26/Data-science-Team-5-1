@@ -187,8 +187,8 @@ Importing Training and Test Data
 ToDo: Links noch updaten!!
 
 ```{r}
-baecker_umsatzdaten_train <- read_csv("https://raw.githubusercontent.com/opencampus-sh/sose20-datascience/master/house_pricing_train.csv")
-baecker_umsatzdaten_test <- read_csv("https://raw.githubusercontent.com/opencampus-sh/sose20-datascience/master/house_pricing_test.csv")
+baecker_umsatzdaten_train <- read_csv("train.csv")
+baecker_umsatzdaten_test <- read_csv("test.csv")
 ```
 
 Estimating (Training) Models
