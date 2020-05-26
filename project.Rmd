@@ -104,8 +104,44 @@ missing_dates$WochentagMoFr <- !isWeekend("Germany", missing_dates$Datum)
 
 Schulferien
 ```{r}
-AshWednesday() #Funktion für Ferien in Deutschland
-#Ferien
+#detach("package:RQuantLib", unload = TRUE)
+library(timeDate)
+
+#Erstelle Vektor mit Datum für jeden Tag im Zeitraum der Umsatzdatentabelle
+all_dates <- tibble(Datum = as.Date(timeSequence(as.Date("2013-07-01"),as.Date("2019-06-03"))))
+
+#Daten der Schulferien in Schleswig-Holstein im Zeitraum der Umsatzdatentabelle
+schulferien <- tibble(Datum = as.Date(c( timeSequence(as.Date("2013-07-01"), as.Date("2013-08-03")),
+timeSequence(as.Date("2013-10-04"), as.Date("2013-10-18")),
+timeSequence(as.Date("2013-12-23"), as.Date("2014-01-06")),
+                                         timeSequence(as.Date("2014-04-16"), as.Date("2014-05-02")),
+timeSequence(as.Date("2014-07-14"), as.Date("2014-08-23")), timeSequence(as.Date("2014-10-13"), as.Date("2014-10-25")),
+timeSequence(as.Date("2014-12-22"), as.Date("2015-01-06")),
+                                         
+timeSequence(as.Date("2015-03-24"), as.Date("2015-04-09")),
+timeSequence(as.Date("2015-07-25"), as.Date("2015-09-03")),
+timeSequence(as.Date("2015-10-17"), as.Date("2015-10-29")), timeSequence(as.Date("2015-12-23"), as.Date("2016-01-06")),
+                                         timeSequence(as.Date("2016-04-16"), as.Date("2016-05-02")),
+timeSequence(as.Date("2016-07-14"), as.Date("2016-08-23")),
+timeSequence(as.Date("2016-10-13"), as.Date("2016-10-25")), timeSequence(as.Date("2016-12-22"), as.Date("2017-01-06")),
+                                         
+timeSequence(as.Date("2017-04-07"), as.Date("2017-04-21")),
+timeSequence(as.Date("2017-07-24"), as.Date("2017-09-02")),
+timeSequence(as.Date("2017-10-16"), as.Date("2017-10-27")),
+timeSequence(as.Date("2017-12-21"), as.Date("2018-01-06")),
+                                         
+timeSequence(as.Date("2018-03-29"), as.Date("2018-04-13")),
+timeSequence(as.Date("2018-07-09"), as.Date("2018-08-18")),
+timeSequence(as.Date("2018-10-01"), as.Date("2018-10-19")),
+timeSequence(as.Date("2018-12-21"), as.Date("2019-01-04")),
+                                         
+timeSequence(as.Date("2019-04-04"), as.Date("2019-04-18"))
+)))
+#Füge Kalender für Schulferien in umsatzdaten ein mit den Werten TRUE und FALSE
+schulferien$schulferien <- TRUE
+schulferien <- left_join(all_dates, schulferien)
+schulferien$schulferien <- !is.na(schulferien$schulferien)
+umsatzdaten <- left_join(umsatzdaten, schulferien)
 ```
 
 
@@ -164,7 +200,7 @@ set.seed(123)
 
 #70% training and 30% testing data
 # umsatzdaten$spl will create a new column in the umsatzdaten dataset.</code>
-umsatzdaten$spl=sample.split(umsatzdaten$Datum,SplitRatio=0.7)
+umsatzdaten$spl3=sample.split(umsatzdaten$Datum,SplitRatio=0.7)
 
 View(umsatzdaten)
 #Training data set
