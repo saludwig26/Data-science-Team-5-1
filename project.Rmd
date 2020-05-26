@@ -23,8 +23,10 @@ When you click the **Knit** button a document will be generated that includes bo
 library(readr)
 library(lubridate)
 library(ggplot2)
+library(Metrics)
 library(dplyr)
 library(zoo)
+library(e1071)
 ```
 
 
@@ -141,6 +143,8 @@ View(umsatzdaten)
 
 ```
 
+
+
 ```Overfitting with linear regression
 ToDo: Noch updaten!!
 Importing Function Packages
@@ -184,7 +188,7 @@ write.csv(test,"test.csv", row.names = TRUE)
 ```
 
 Importing Training and Test Data
-ToDo: Links noch updaten!!
+
 
 ```{r}
 baecker_umsatzdaten_train <- read_csv("train.csv")
@@ -270,6 +274,33 @@ rbind(mape(house_pricing_test$price, predict(mod1, newdata=house_pricing_test)),
 ```
 
 
+## Training the SVM  -- TO DO!
+```{r}
+# Estimation of an SVM with optimized weighting parameters and given standard hyper parameters
+# Typically not used; instead, the function svm_tune is used in order to also get a model with optimized hyper parameters
+model_svm <- svm(price ~ bathrooms, train_dataset)
+```
+
+```{r}
+# Estimation of various SVM (each with optimized weighting parameters) using systematically varied hyper parameters (typically called 'grid search' approach) and cross validation
+# the resulting object includes the optimal model in the element named 'best.model'
+svm_tune <- tune(svm, price ~ bedrooms + bathrooms + sqft_living + zipcode, data=train_dataset,
+                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
+```
+
+## Checking the Prediction Quality -- TO DO!
+```{r}
+# Calculating the prediction for the training data using the best model according to the grid search
+pred_train <- predict(svm_tune$best.model, train_dataset)
+# Calculating the prediction quality for the training data using the MAPE
+mape(train_dataset$price, pred_train)
+```
 
 
+```{r}
+# Calculating the prediction for the test data using the best model according to the grid search
+pred_test <- predict(svm_tune$best.model, test_dataset)
+# Calculating the prediction quality for the training data using the MAPE
+mape(test_dataset$price, pred_test)
+```
 
