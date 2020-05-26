@@ -187,6 +187,11 @@ write.csv(test,"test.csv", row.names = TRUE)
 #> View(test) # you will see that this dataframe has all values where iris$spl==FALSE
 ```
 
+```{r}
+# Uncomment the following line to check the correctness of the code with a small (and computationally fast) training data set
+train_dataset <- sample_frac(train, .10)
+```
+
 Importing Training and Test Data
 
 
@@ -276,15 +281,16 @@ rbind(mape(house_pricing_test$price, predict(mod1, newdata=house_pricing_test)),
 
 ## Training the SVM  -- TO DO!
 ```{r}
+
 # Estimation of an SVM with optimized weighting parameters and given standard hyper parameters
 # Typically not used; instead, the function svm_tune is used in order to also get a model with optimized hyper parameters
-model_svm <- svm(price ~ bathrooms, train_dataset)
+model_svm <- svm(Umsatz ~ wochentag, train_dataset)
 ```
 
 ```{r}
 # Estimation of various SVM (each with optimized weighting parameters) using systematically varied hyper parameters (typically called 'grid search' approach) and cross validation
 # the resulting object includes the optimal model in the element named 'best.model'
-svm_tune <- tune(svm, price ~ bedrooms + bathrooms + sqft_living + zipcode, data=train_dataset,
+svm_tune <- tune(svm, Umsatz ~ wochentag, data=train_dataset,
                  ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
 ```
 
