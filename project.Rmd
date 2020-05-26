@@ -173,11 +173,11 @@ train=subset(umsatzdaten, umsatzdaten$spl==TRUE)
 
 # you will see that this dataframe has all values where umsatzdaten$spl==TRUE
 View(train)
-write.csv(train,"https://github.com/saludwig26/Data-science-Team-5-1\\train.csv", row.names = TRUE)
+write.csv(train,"train.csv", row.names = TRUE)
 #Similarly, to create the testing dataset,
 test=subset(umsatzdaten, umsatzdaten$spl==FALSE) 
 View(test)
-write.csv(train,"https://github.com/saludwig26/Data-science-Team-5-1\\test.csv", row.names = TRUE)
+write.csv(test,"test.csv", row.names = TRUE)
 #where <i>spl== FALSE </i> means to add only those rows that have value true for spl in the training dataframe
 
 #> View(test) # you will see that this dataframe has all values where iris$spl==FALSE
