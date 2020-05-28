@@ -1,0 +1,262 @@
+---
+title: "plots"
+author: "Alejandro"
+date: "5/28/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+
+
+Einbinden benoetigter Bibliotheken
+```{r}
+library(readr)
+library(lubridate)
+library(ggplot2)
+library(dplyr)
+library(zoo)
+library(Metrics)
+```
+
+
+Einlesen der Umsatzdaten
+```{r}
+umsatzdaten <- read_csv("umsatzdaten_gekuerzt.csv")
+```
+
+
+Erstellung der Variablen
+```{r}
+# WOCHENTAG: 
+#Berechnung der Wochentage
+umsatzdaten$wochentag <- weekdays(umsatzdaten$Datum)
+
+# Umwandlung von 'wochentag" in eine Faktor-Variable mit einer vorgegeben Sortierung der Level (Kategorien)
+umsatzdaten$wochentag <- factor(umsatzdaten$wochentag, levels=c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
+
+# JAHRESZEIT: 
+#Berechnung der Jahresqrt
+yq <- as.yearqtr(as.yearmon(umsatzdaten$Datum, "%m/%d/%Y") + 1/12)
+# Berechnung der Jahreszeit
+umsatzdaten$jahreszeit <- factor(format(yq, "%q"), levels = 1:4, 
+      labels = c("Winter", "Frueling", "Sommer", "Herbst"))
+
+# FEIERTAGEN: 
+#Einbinden der Bibliothek mit dr Funktion isHoliday:
+detach("package:timeDate", unload = TRUE)
+library(RQuantLib)
+
+#Zeige deutsche Feiertage an:
+getHolidayList("Germany", as.Date("2013-01-01"), as.Date("2020-01-01"))
+
+#Füge die Feiertage "Himmelfahrt", "Pfingsten", "Tag deutscher Einheit" und "Reformationstag" zwischen 2013 und 2022 hinzu:
+further_holidays <- (as.Date(c("2013-10-03", "2014-10-03", "2015-10-03", "2016-10-03", "2017-10-03", "2018-10-03", "2019-10-03", "2020-10-03", "2021-10-03", "2017-10-31", "2018-10-31", "2019-10-31", "2020-10-31", "2021-10-31", "2022-10-31", "2013-05-09", "2014-05-29", "2015-05-14", "2016-05-05", "2017-05-25", "2018-05-10", "2019-05-30", "2020-05-21", "2021-05-13", "2022-05-26", "2013-05-20", "2014-06-09", "2015-05-25", "2016-05-16", "2017-06-05", "2018-05-21", "2019-06-10", "2020-06-01", "2021-05-24", "2022-06-06", "2013-12-26", "2014-12-26", "2015-12-26", "2016-12-26", "2017-12-26", "2018-12-26", "2019-12-26", "2020-12-26", "2021-12-26", "2022-12-26")))
+addHolidays("Germany", further_holidays)
+
+# GESCHLOSSEN: 
+#hat der Bäcker an manchen Tagen geschlossen = kein Umsatz
+#Vorher/nachher mehr umsatz
+#Erstelle neue Spalte mit dem Wert für Feiertag (Wochenenden ausgenommen):
+umsatzdaten$holiday <- isHoliday("Germany", umsatzdaten$Datum) & !isWeekend("Germany", umsatzdaten$Datum)
+
+detach("package:RQuantLib", unload = TRUE)
+library(timeDate)
+all_dates <- tibble(Datum = as.Date(timeSequence(as.Date("2013-07-01"),as.Date("2019-06-03"))))
+missing_dates <- anti_join(all_dates, umsatzdaten)
+
+detach("package:timeDate", unload = TRUE)
+library(RQuantLib)
+missing_dates$holiday <- isHoliday("Germany", missing_dates$Datum)
+missing_dates$WochentagMoFr <- !isWeekend("Germany", missing_dates$Datum)
+
+#KIWO:
+#umsatzdaten <- read_csv("umsatzdaten_gekuerzt.csv")
+kiwo <- read_csv("kiwo.csv")
+umsatzdaten <- left_join(umsatzdaten, kiwo)
+```
+```{r}
+#Einbindung Wetterdaten
+wetter <- read_csv("wetter.csv")
+umsatzdaten<- left_join(umsatzdaten, wetter)
+```
+
+1 brot
+2 broetchen
+3 croissant
+4 konditorei
+5 kuchen
+6 saisonbrot
+```{r}
+#UMSATZ ~ WOCHENTAG
+ggplot(umsatzdaten) +
+  facet_wrap(~Warengruppe) +
+  geom_point(aes(x = wochentag, y = Umsatz), size=0.1) 
+
+```
+```{r}
+#UMSATZ ~ JAHRESZEIT
+ggplot(umsatzdaten) +
+  facet_wrap(~Warengruppe) +
+  geom_point(aes(x = jahreszeit, y = Umsatz), size=0.1)
+```
+
+
+```{r}
+#UMSATZ ~ TEMPERATUR
+ggplot(umsatzdaten) +
+  facet_wrap(~Warengruppe) +
+  geom_point(aes(x = Temperatur, y = Umsatz), size=0.1) 
+```
+```{r}
+#UMSATZ ~ BEWOELKUNG
+ggplot(umsatzdaten) +
+  facet_wrap(~Warengruppe) +
+  geom_point(aes(x = Bewoelkung, y = Umsatz), size=0.1)
+```
+```{r}
+#UMSATZ ~ Holiday
+ggplot(umsatzdaten) +
+  facet_wrap(~Warengruppe) +
+  geom_point(aes(x = holiday, y = Umsatz), size=0.1)
+```
+
+```{r}
+#UMSATZ ~ KIELERWOCHE
+ggplot(umsatzdaten) +
+  facet_wrap(~Warengruppe) +
+  geom_point(aes(x = KielerWoche, y = Umsatz), size=0.1)
+```
+
+
+```{r}
+#UMSATZ ~ WINDGESCHWINDIGKEIT
+ggplot(umsatzdaten) +
+  facet_wrap(~Warengruppe) +
+  geom_point(aes(x = Windgeschwindigkeit, y = Umsatz), size=0.1) 
+```
+
+
+Balkendiagramm der Umsätze von Warengruppe je Wochentag 
+```{r}
+
+ggplot(umsatzdaten) +
+  geom_bar(aes(x = wochentag, y = Umsatz), stat = "identity")
+
+
+
+```
+Balkendiagramm der Umsätze aller Warengruppen je Wochentag (mit Konfidenzintervall)
+```{r}
+# Berechnung von Mittelwerten, Standardabweichungen, Standardfehlern und Konfidenzintervallen
+my_sum <- umsatzdaten %>%
+  group_by(wochentag) %>%
+  summarise(
+    n=n(),
+    mean=mean(Umsatz),
+    sd=sd(Umsatz)
+  ) %>%
+  mutate( se=sd/sqrt(n))  %>%
+  mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+
+# Confidence Interval
+ggplot(my_sum) +
+  geom_bar( aes(x=wochentag, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=wochentag, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="orange", alpha=0.9, size=1.5) +
+  ggtitle("using confidence interval")
+```
+
+
+Balkendiagramm der Umsätze je Warengruppe 1-6 je Wochentag 
+1 brot
+2 broetchen
+3 croissant
+4 konditorei
+5 kuchen
+6 saisonbrot
+
+```{r}
+brot <- umsatzdaten[umsatzdaten$Warengruppe == '1', ]
+ggplot(brot) + ggtitle('Brot') +
+  geom_bar(aes(x = wochentag, y = Umsatz), stat = "identity")
+
+broetchen <- umsatzdaten[umsatzdaten$Warengruppe == '2', ]
+ggplot(broetchen) + ggtitle('Broetchen') +
+  geom_bar(aes(x = wochentag, y = Umsatz), stat = "identity")
+
+croissant <- umsatzdaten[umsatzdaten$Warengruppe == '3', ]
+ggplot(croissant) + ggtitle('Croissant') +
+  geom_bar(aes(x = wochentag, y = Umsatz), stat = "identity")
+
+konditorei <- umsatzdaten[umsatzdaten$Warengruppe == '4', ]
+ggplot(konditorei) + ggtitle('Konditorei') +
+  geom_bar(aes(x = wochentag, y = Umsatz), stat = "identity")
+
+kuchen <- umsatzdaten[umsatzdaten$Warengruppe == '5', ]
+ggplot(kuchen) + ggtitle('Kuchen') +
+  geom_bar(aes(x = wochentag, y = Umsatz), stat = "identity")
+
+saisonbrot <- umsatzdaten[umsatzdaten$Warengruppe == '6', ]
+ggplot(saisonbrot) + ggtitle('Saisonbrot') +
+  geom_bar(aes(x = wochentag, y = Umsatz), stat = "identity")
+
+```
+
+
+```{r}
+
+# Berechnung von Mittelwerten, Standardabweichungen, Standardfehlern und Konfidenzintervallen
+brot_sum <- brot %>%
+  group_by(wochentag) %>%
+  summarise(
+    n=n(),
+    mean=mean(Umsatz),
+    sd=sd(Umsatz)
+  ) %>%
+  mutate( se=sd/sqrt(n))  %>%
+  mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+
+# Confidence Interval
+ggplot(brot_sum) +
+  geom_bar( aes(x=wochentag, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=wochentag, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="orange", alpha=0.9, size=1.5) +
+  ggtitle("Brot / confidence interval") 
+
+```
+
+
+Jahreszeit
+```{r}
+# Berechnung von Mittelwerten, Standardabweichungen, Standardfehlern und Konfidenzintervallen
+brot_sum <- brot %>%
+  group_by(jahreszeit) %>%
+  summarise(
+    n=n(),
+    mean=mean(Umsatz),
+    sd=sd(Umsatz)
+  ) %>%
+  mutate( se=sd/sqrt(n))  %>%
+  mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+
+# Confidence Interval
+ggplot(brot_sum) +
+  geom_bar( aes(x=jahreszeit, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=jahreszeit, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="orange", alpha=0.9, size=1.5) +
+  ggtitle("Brot / confidence interval") 
+```
+
+
+
+```{r}
+
+
+```
+
