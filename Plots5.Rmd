@@ -99,7 +99,7 @@ umsatzdaten<- left_join(umsatzdaten, wetter)
 #UMSATZ ~ WOCHENTAG
 ggplot(umsatzdaten) +
   facet_wrap(~Warengruppe) +
-  geom_point(aes(x = wochentag, y = Umsatz), size=0.1) 
+  geom_point(aes(x = wochentag, y = Umsatz, colour=holiday), size=0.1) 
 
 ```
 ```{r}
@@ -126,7 +126,7 @@ ggplot(umsatzdaten) +
 #UMSATZ ~ Holiday
 ggplot(umsatzdaten) +
   facet_wrap(~Warengruppe) +
-  geom_point(aes(x = holiday, y = Umsatz), size=0.1)
+  geom_point(aes(x = holiday, y = Umsatz, colour=wochentag), size=0.1)
 ```
 
 ```{r}
