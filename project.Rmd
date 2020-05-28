@@ -111,6 +111,30 @@ library(RQuantLib)
 missing_dates$holiday <- isHoliday("Germany", missing_dates$Datum)
 missing_dates$WochentagMoFr <- !isWeekend("Germany", missing_dates$Datum)
 
+detach("package:RQuantLib", unload = TRUE)
+library(timeDate)
+all_dates <- tibble(Datum = as.Date(timeSequence(as.Date("2013-07-01"),as.Date("2019-06-03"))))
+
+missing_dates <- anti_join(all_dates, umsatzdaten)
+
+
+detach("package:timeDate", unload = TRUE)
+library(RQuantLib)
+missing_dates$holiday <- isHoliday("Germany", missing_dates$Datum)
+missing_dates$WochentagMoFr <- !isWeekend("Germany", missing_dates$Datum)
+
+
+dayoff_after <- tibble(Datum = missing_dates$Datum + 1, dayoff_after=TRUE)
+dayoff_b4 <- tibble(Datum = missing_dates$Datum - 1, dayoff_b4=TRUE)
+umsatzdaten <- left_join(umsatzdaten, dayoff_after)
+umsatzdaten <- left_join(umsatzdaten, dayoff_b4)
+
+dayoff_after_holiday <- tibble(Datum = missing_dates$Datum[missing_dates$holiday==TRUE] + 1, dayoff_after_holiday=TRUE)
+dayoff_b4_holiday <- tibble(Datum = missing_dates$Datum[missing_dates$holiday==TRUE] - 1, dayoff_b4_holiday=TRUE)
+umsatzdaten <- left_join(umsatzdaten, dayoff_after_holiday)
+umsatzdaten <- left_join(umsatzdaten, dayoff_b4_holiday)
+
+
 ```
 
 Schulferien
