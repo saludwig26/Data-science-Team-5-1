@@ -114,7 +114,7 @@ ggplot(umsatzdaten) +
 #UMSATZ ~ TEMPERATUR
 ggplot(umsatzdaten) +
   facet_wrap(~Warengruppe) +
-  geom_point(aes(x = Temperatur, y = Umsatz), size=0.1) 
+  geom_point(aes(x = Temperatur, y = Umsatz, colour=holiday), size=0.1) 
 ```
 ```{r}
 #UMSATZ ~ BEWOELKUNG
