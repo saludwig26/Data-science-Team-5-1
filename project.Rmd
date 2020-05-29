@@ -10,15 +10,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```
 
-
-
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-
 ```{r}
 library(readr)
 library(lubridate)
@@ -28,7 +19,25 @@ library(dplyr)
 library(zoo)
 library(e1071)
 ```
+#### Installation von Python und der für TensorFlow benötigten Pakete (nur einmalig nötig) ###
+```{r}
+library(reticulate)
 
+# Installation von miniconda (falls nicht vorhanden)
+install_miniconda()
+
+# Anlegen einer speziellen Python Umgebung
+conda_create("r-reticulate")
+
+# Installieren der Pakete in der angelegten Umgebung
+conda_install("r-reticulate", "pandas")
+conda_install("r-reticulate", "numpy")
+conda_install("r-reticulate", "tensorflow")
+
+# Verwenden der speziellen Python Umgebung die zuvor erstellt wurde
+use_condaenv("r-reticulate")
+
+```
 
 ```{r}
 umsatzdaten <- read_csv("umsatzdaten_gekuerzt.csv")
