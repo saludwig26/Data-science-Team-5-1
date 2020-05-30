@@ -120,7 +120,7 @@ ggplot(umsatzdaten) +
 #UMSATZ ~ BEWOELKUNG
 ggplot(umsatzdaten) +
   facet_wrap(~Warengruppe) +
-  geom_point(aes(x = Bewoelkung, y = Umsatz), size=0.1)
+  geom_point(aes(x = Bewoelkung, y = Umsatz, colour=holiday), size=0.1)
 ```
 ```{r}
 #UMSATZ ~ Holiday
@@ -141,7 +141,7 @@ ggplot(umsatzdaten) +
 #UMSATZ ~ WINDGESCHWINDIGKEIT
 ggplot(umsatzdaten) +
   facet_wrap(~Warengruppe) +
-  geom_point(aes(x = Windgeschwindigkeit, y = Umsatz), size=0.1) 
+  geom_point(aes(x = Windgeschwindigkeit, y = Umsatz,  colour=holiday), size=0.1) 
 ```
 
 
