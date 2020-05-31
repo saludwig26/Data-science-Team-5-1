@@ -52,7 +52,8 @@ umsatzdaten$jahreszeit <- factor(format(yq, "%q"), levels = 1:4,
 
 # FEIERTAGEN: 
 #Einbinden der Bibliothek mit dr Funktion isHoliday:
-detach("package:timeDate", unload = TRUE)
+package:timeDate
+#detach("package:timeDate", unload = TRUE)
 library(RQuantLib)
 
 #Zeige deutsche Feiertage an:
@@ -72,6 +73,7 @@ detach("package:RQuantLib", unload = TRUE)
 library(timeDate)
 all_dates <- tibble(Datum = as.Date(timeSequence(as.Date("2013-07-01"),as.Date("2019-06-03"))))
 missing_dates <- anti_join(all_dates, umsatzdaten)
+
 
 detach("package:timeDate", unload = TRUE)
 library(RQuantLib)
@@ -173,6 +175,110 @@ ggplot(my_sum) +
   geom_errorbar( aes(x=wochentag, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="orange", alpha=0.9, size=1.5) +
   ggtitle("using confidence interval")
 ```
+
+Balkendiagramm der Umsätze aller Warengruppen je Windgeschwindigkeit (mit Konfidenzintervall)
+```{r}
+# Berechnung von Mittelwerten, Standardabweichungen, Standardfehlern und Konfidenzintervallen
+my_sum <- umsatzdaten %>%
+  group_by(Windgeschwindigkeit) %>%
+  summarise(
+    n=n(),
+    mean=mean(Umsatz),
+    sd=sd(Umsatz)
+  ) %>%
+  mutate( se=sd/sqrt(n))  %>%
+  mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+
+# Confidence Interval
+ggplot(my_sum) +
+  geom_bar( aes(x=Windgeschwindigkeit, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=Windgeschwindigkeit, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="orange", alpha=0.9, size=1.5) +
+  ggtitle("Confidence Interval")
+```
+
+Balkendiagramm der Umsätze aller Warengruppen an Feiertagen (mit Konfidenzintervall)
+```{r}
+# Berechnung von Mittelwerten, Standardabweichungen, Standardfehlern und Konfidenzintervallen
+my_sum <- umsatzdaten %>%
+  group_by(holiday) %>%
+  summarise(
+    n=n(),
+    mean=mean(Umsatz),
+    sd=sd(Umsatz)
+  ) %>%
+  mutate( se=sd/sqrt(n))  %>%
+  mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+
+# Confidence Interval
+ggplot(my_sum) +
+  geom_bar( aes(x=holiday, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=holiday, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="orange", alpha=0.9, size=1.5) +
+  ggtitle("Confidence Interval")
+```
+
+```{r}
+# Berechnung von Mittelwerten, Standardabweichungen, Standardfehlern und Konfidenzintervallen
+my_sum <- umsatzdaten %>%
+  group_by(jahreszeit) %>%
+  summarise(
+    n=n(),
+    mean=mean(Umsatz),
+    sd=sd(Umsatz)
+  ) %>%
+  mutate( se=sd/sqrt(n))  %>%
+  mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+
+# Confidence Interval
+ggplot(my_sum) +
+  geom_bar( aes(x=jahreszeit, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=jahreszeitr, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="orange", alpha=0.9, size=1.5) +
+  ggtitle("using confidence interval")
+```
+
+Balkendiagramm der Umsätze aller Warengruppen pro Jahreszeit (mit Konfidenzintervall)
+```{r}
+my_sum <- umsatzdaten %>%
+  group_by(jahreszeit) %>%
+  summarise(
+    n=n(),
+    mean=mean(Umsatz),
+    sd=sd(Umsatz)
+  ) %>%
+  mutate( se=sd/sqrt(n))  %>%
+  mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+
+# Confidence Interval
+ggplot(my_sum) +
+  geom_bar( aes(x=jahreszeit, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=jahreszeit, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="orange", alpha=0.9, size=1.5) +
+  ggtitle("Confidence Interval")
+```
+
+Balkendiagramm der Umsätze aller Warengruppen je Grad an Temperatur (mit Konfidenzintervall)
+```{r}
+# Berechnung von Mittelwerten, Standardabweichungen, Standardfehlern und Konfidenzintervallen
+my_sum <- umsatzdaten %>%
+  group_by(Temperatur) %>%
+  summarise(
+    n=n(),
+    mean=mean(Umsatz),
+    sd=sd(Umsatz)
+  ) %>%
+  mutate( se=sd/sqrt(n))  %>%
+  mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+
+# Confidence Interval
+ggplot(my_sum) +
+  geom_bar( aes(x=Temperatur, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=Temperatur, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="orange", alpha=0.9, size=1.5) +
+  ggtitle("using confidence interval")
+```
+```
+
+```{r}
+
+```
+
 
 
 Balkendiagramm der Umsätze je Warengruppe 1-6 je Wochentag 
