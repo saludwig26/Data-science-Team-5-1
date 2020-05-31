@@ -88,12 +88,14 @@ View(umsatzdaten)
 ```
 
 Langes Wochendende Vorher und nachher
+```{r}
+#umsatzdaten$wochentag == "Saturday", umsatzdaten$holiday == "TRUE")
+#umsatzdaten$wochentag == "Sunday" & umsatzdaten$holiday == "TRUE"
+
+```
 Feiertag am Wochenende
 ```{r}
-
-
-
-
+isHoliday=
 ```
 
 hat der Bäcker an manchen Tagen geschlossen = kein Umsatz
@@ -244,22 +246,24 @@ summary(mod8)
 
 glance(mod1)
 glance(mod2)
+glance(mod8)
+
 ```
 
 Preparation of Model Results
 ```{r}
-rbind(glance(mod1), glance(mod2), glance(mod3), glance(mod4), glance(mod5), glance(mod6), glance(mod7))
+rbind(glance(mod1), glance(mod2), glance(mod3), glance(mod4), glance(mod5), glance(mod6), glance(mod7), glance(mod8))
 ```
 
 Model Prediction Quality for the Training Data Using the Mean Absolute Error
 ```{r}
-rbind(mae(house_pricing_train$price, predict(mod1)),
-      mae(house_pricing_train$price, predict(mod2)),
-      mae(house_pricing_train$price, predict(mod3)),
-      mae(house_pricing_train$price, predict(mod4)),
-      mae(house_pricing_train$price, predict(mod5)),
-      mae(house_pricing_train$price, predict(mod6)),
-      mae(house_pricing_train$price, predict(mod7)))
+rbind(mae(train$Umsatz, predict(mod1)),
+      mae(train$Umsatz, predict(mod2)),
+      mae(train$Umsatz, predict(mod3)),
+      mae(train$Umsatz, predict(mod4)),
+      mae(train$Umsatz, predict(mod5)),
+      mae(train$Umsatz, predict(mod6)),
+      mae(train$Umsatz, predict(mod8)))
 ```
 
 
@@ -272,18 +276,36 @@ rbind(mape(house_pricing_train$price, predict(mod1)),
       mape(house_pricing_train$price, predict(mod5)),
       mape(house_pricing_train$price, predict(mod6)),
       mape(house_pricing_train$price, predict(mod7)))
+
+rbind(mape(train$Umsatz, predict(mod1)),
+      mape(train$Umsatz, predict(mod2)),
+      mape(train$Umsatz, predict(mod3)),
+      mape(train$Umsatz, predict(mod4)),
+      mape(train$Umsatz, predict(mod5)),
+      mape(train$Umsatz, predict(mod6)),
+      mape(train$Umsatz, predict(mod8)))
 ```
 
 Model Prediction Quality for the (Unknown) Test Data Using the Mean Absolute Percentage Error
 ```{r}
-rbind(mape(house_pricing_test$price, predict(mod1, newdata=house_pricing_test)),
-      mape(house_pricing_test$price, predict(mod2, newdata=house_pricing_test)),
-      mape(house_pricing_test$price, predict(mod3, newdata=house_pricing_test)),
-      mape(house_pricing_test$price, predict(mod4, newdata=house_pricing_test)),
-      mape(house_pricing_test$price, predict(mod5, newdata=house_pricing_test)),
-      mape(house_pricing_test$price, predict(mod6, newdata=house_pricing_test)),
-      mape(house_pricing_test$price, predict(mod7, newdata=house_pricing_test)))
+rbind(mape(test$Umsatz, predict(mod1, newdata=test)),
+      mape(test$Umsatz, predict(mod2, newdata=test)),
+      mape(test$Umsatz, predict(mod3, newdata=test)))
 
+    #mape(test$Umsatz, predict(mod4, newdata=test))),
+     # mape(test$Umsatz, predict(mod5, newdata=test)),
+      #mape(test$Umsatz, predict(mod6, newdata=test)),
+      #mape(test$Umsatz, predict(mod8, newdata=test)))
+
+      
+   
+#rbind(mape(house_pricing_test$price, predict(mod1, newdata=house_pricing_test)),
+#      mape(house_pricing_test$price, predict(mod2, newdata=house_pricing_test)),
+ #     mape(house_pricing_test$price, predict(mod3, newdata=house_pricing_test)),
+  #    mape(house_pricing_test$price, predict(mod4, newdata=house_pricing_test)),
+   #   mape(house_pricing_test$price, predict(mod5, newdata=house_pricing_test)),
+    #  mape(house_pricing_test$price, predict(mod6, newdata=house_pricing_test)),
+     # mape(house_pricing_test$price, predict(mod7, newdata=house_pricing_test)))
 
 ```
 
@@ -321,28 +343,6 @@ mape(test_dataset$price, pred_test)
 
 
 
-#TO DO
-### Installation von Python und der für TensorFlow benötigten Pakete (nur einmalig nötig) ###
-
-```{r}
-install.packages("reticulate")
-library(reticulate)
-
-# Installation von miniconda (falls nicht vorhanden)
-install_miniconda()
-
-# Anlegen einer speziellen Python Umgebung
-conda_create("r-reticulate")
-
-# Installieren der Pakete in der angelegten Umgebung
-conda_install("r-reticulate", "pandas")
-conda_install("r-reticulate", "numpy")
-conda_install("r-reticulate", "tensorflow")
-
-# Verwenden der speziellen Python Umgebung die zuvor erstellt wurde
-use_condaenv("r-reticulate")
-
-```
 
 #TO DO
 Estimation of Neural Net Data Preparation
@@ -412,7 +412,7 @@ get.norm_values <- function (.data, select_columns = NULL) {
 ### Datenimport ###
 ```{r}
 # Einlesen der Daten
-house_pricing <- read_csv("https://raw.githubusercontent.com/opencampus-sh/sose20-datascience/master/house_pricing_test.csv")
+#house_pricing <- read_csv("https://raw.githubusercontent.com/opencampus-sh/sose20-datascience/master/house_pricing_test.csv")
 
 ```
 
