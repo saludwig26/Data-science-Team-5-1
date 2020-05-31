@@ -71,7 +71,7 @@ umsatzdaten$jahreszeit <- factor(format(yq, "%q"), levels = 1:4,
 Erstellung der Variable mit Feiertage 
 ```{r}
 #Einbinden der Bibliothek mit dr Funktion isHoliday:
-detach("package:timeDate", unload = TRUE)
+#detach("package:timeDate", unload = TRUE)
 library(RQuantLib)
 
 #Zeige deutsche Feiertage an:
@@ -129,10 +129,20 @@ dayoff_b4 <- tibble(Datum = missing_dates$Datum - 1, dayoff_b4=TRUE)
 umsatzdaten <- left_join(umsatzdaten, dayoff_after)
 umsatzdaten <- left_join(umsatzdaten, dayoff_b4)
 
+#Setze für NA in der Tabelle den Wert FALSE ein
+umsatzdaten$dayoff_after <- !is.na(umsatzdaten$dayoff_after)
+umsatzdaten$dayoff_b4 <- !is.na(umsatzdaten$dayoff_b4)
+
+
+#Tag vor oder nachdem der Bäcker an einem FEIERTAG geschlossen hatte
 dayoff_after_holiday <- tibble(Datum = missing_dates$Datum[missing_dates$holiday==TRUE] + 1, dayoff_after_holiday=TRUE)
 dayoff_b4_holiday <- tibble(Datum = missing_dates$Datum[missing_dates$holiday==TRUE] - 1, dayoff_b4_holiday=TRUE)
 umsatzdaten <- left_join(umsatzdaten, dayoff_after_holiday)
 umsatzdaten <- left_join(umsatzdaten, dayoff_b4_holiday)
+
+#Setze für NA in der Tabelle den Wert FALSE ein
+umsatzdaten$dayoff_after_holiday <- !is.na(umsatzdaten$dayoff_after_holiday)
+umsatzdaten$dayoff_b4_holiday <- !is.na(umsatzdaten$dayoff_b4_holiday)
 
 
 ```
@@ -193,6 +203,7 @@ kiwo <- read_csv("kiwo.csv")
 
 
 umsatzdaten <- left_join(umsatzdaten, kiwo)
+umsatzdaten$KielerWoche <- !is.na(umsatzdaten$KielerWoche)
 View(umsatzdaten)
 ```
 
