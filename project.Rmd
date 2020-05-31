@@ -212,12 +212,21 @@ Einbindung Wetterdaten
 ```{r}
 library(readr)
 library(dplyr)
+library(Hmisc)
 
 wetter <- read_csv("wetter.csv")
 View(wetter)
-
 umsatzdaten<- left_join(umsatzdaten, wetter)
 View(umsatzdaten)
+
+umsatzdaten$temperatur <- cut(umsatzdaten$Temperatur, c(-20,-10,0,10,20,30,40) )
+
+#UMSATZ ~ TEMPERATUR
+ggplot(umsatzdaten) +
+  facet_wrap(~Warengruppe) +
+  geom_point(aes(x = temperatur, y = Umsatz, colour=holiday), size=0.1) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+
 
 
 
@@ -252,7 +261,7 @@ umsatzdaten$spl3=sample.split(umsatzdaten$Datum,SplitRatio=0.7)
 
 View(umsatzdaten)
 #Training data set
-train=subset(umsatzdaten, umsatzdaten$spl==TRUE)
+train=subset(umsatzdaten, umsatzdaten$spl3==TRUE)
 # where <i>spl== TRUE</i> means to add only those rows that have value true for spl in the training dataframe
 
 # you will see that this dataframe has all values where umsatzdaten$spl==TRUE
