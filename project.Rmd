@@ -84,7 +84,7 @@ addHolidays("Germany", further_holidays)
 #Erstelle neue Spalte mit dem Wert für Feiertag (Wochenenden ausgenommen):
 umsatzdaten$holiday <- isHoliday("Germany", umsatzdaten$Datum) & !isWeekend("Germany", umsatzdaten$Datum)
 
-View(umsatzdaten)
+#View(umsatzdaten)
 ```
 
 Langes Wochendende Vorher und nachher
@@ -101,7 +101,7 @@ isHoliday=
 hat der Bäcker an manchen Tagen geschlossen = kein Umsatz
 Vorher/nachher mehr umsatz 
 ```{r}
-detach("package:RQuantLib", unload = TRUE)
+#detach("package:RQuantLib", unload = TRUE)
 library(timeDate)
 all_dates <- tibble(Datum = as.Date(timeSequence(as.Date("2013-07-01"),as.Date("2019-06-03"))))
 
@@ -197,16 +197,16 @@ Kieler Woche:
 2. Einlesen der Daten
 3. Zusammenführen der Daten
 ```{r}
-library(readr)
-library(dplyr)
+#library(readr)
+#library(dplyr)
 
 #umsatzdaten <- read_csv("umsatzdaten_gekuerzt.csv")
 kiwo <- read_csv("kiwo.csv")
 
-
+umsatzdaten$KielerWoche <- NULL
 umsatzdaten <- left_join(umsatzdaten, kiwo)
 umsatzdaten$KielerWoche <- !is.na(umsatzdaten$KielerWoche)
-View(umsatzdaten)
+#View(umsatzdaten)
 ```
 
 
@@ -214,8 +214,8 @@ Einbindung Wetterdaten
 ```{r}
 #umsatzdaten <- read_csv("umsatzdaten_gekuerzt.csv")
 
-library(readr)
-library(dplyr)
+#library(readr)
+#ibrary(dplyr)
 
 wetter <- read_csv("wetter.csv")
 View(wetter)
@@ -238,6 +238,9 @@ Wetterzustand <- cut(umsatzdaten$Wettercode, breaks = c(0,1,4,11,13,14,17,18,20,
 
 View(Wetterzustand)
 Wetterzustand[1:10]
+
+umsatzdaten$wetterzustand <- Wetterzustand
+
 
 #keineBeobachtung 0
 #Bewölkung (1-3)
@@ -294,14 +297,14 @@ umsatzdaten$spl3=sample.split(umsatzdaten$Datum,SplitRatio=0.7)
 
 View(umsatzdaten)
 #Training data set
-train=subset(umsatzdaten, umsatzdaten$spl==TRUE)
+train=subset(umsatzdaten, umsatzdaten$spl3==TRUE)
 # where <i>spl== TRUE</i> means to add only those rows that have value true for spl in the training dataframe
 
 # you will see that this dataframe has all values where umsatzdaten$spl==TRUE
 View(train)
 write.csv(train,"train.csv", row.names = TRUE)
 #Similarly, to create the testing dataset,
-test=subset(umsatzdaten, umsatzdaten$spl==FALSE) 
+test=subset(umsatzdaten, umsatzdaten$spl3==FALSE) 
 View(test)
 write.csv(test,"test.csv", row.names = TRUE)
 #where <i>spl== FALSE </i> means to add only those rows that have value true for spl in the training dataframe
