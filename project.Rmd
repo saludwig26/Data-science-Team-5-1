@@ -88,12 +88,14 @@ View(umsatzdaten)
 ```
 
 Langes Wochendende Vorher und nachher
+```{r}
+#umsatzdaten$wochentag == "Saturday", umsatzdaten$holiday == "TRUE")
+#umsatzdaten$wochentag == "Sunday" & umsatzdaten$holiday == "TRUE"
+
+```
 Feiertag am Wochenende
 ```{r}
-
-
-
-
+isHoliday=
 ```
 
 hat der Bäcker an manchen Tagen geschlossen = kein Umsatz
@@ -210,25 +212,56 @@ View(umsatzdaten)
 
 Einbindung Wetterdaten
 ```{r}
+#umsatzdaten <- read_csv("umsatzdaten_gekuerzt.csv")
+
 library(readr)
 library(dplyr)
-library(Hmisc)
 
 wetter <- read_csv("wetter.csv")
 View(wetter)
+
 umsatzdaten<- left_join(umsatzdaten, wetter)
 View(umsatzdaten)
 
-umsatzdaten$temperatur <- cut(umsatzdaten$Temperatur, c(-20,-10,0,10,20,30,40) )
-
-#UMSATZ ~ TEMPERATUR
-ggplot(umsatzdaten) +
-  facet_wrap(~Warengruppe) +
-  geom_point(aes(x = temperatur, y = Umsatz, colour=holiday), size=0.1) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+## Umformen der numerischen Variable Windgeschwindigkeit in Faktorvariabel 
+umsatzdaten$Windgeschwindigkeit <- cut(umsatzdaten$Windgeschwindigkeit, breaks = c(0,10.7,20.7,37), labels=c("Brise", "Wind","Sturm"), right=FALSE)
+umsatzdaten$Windgeschwindigkeit[1:10]
+View(umsatzdaten$Windgeschwindigkeit)
 
 
+## Umformen der numerischen Variable Temperatur
+umsatzdaten$Temperatur<- cut(umsatzdaten$Temperatur, breaks = c(1,11,21,31,45), labels=c("kalt", "moderat", "sommerlich", "heiß"),right=FALSE)
+View(umsatzdaten$Temperatur)
 
+#Wettercode - Umformen der numerischen Variable Wettercode in Faktorvariabel 
+Wetterzustand <- cut(umsatzdaten$Wettercode, breaks = c(0,1,4,11,13,14,17,18,20,30,36,40,50,60,68,70,76,79,80,83,87,89,91,99), labels=c("keineBeobachtung","Bewölkung", "DunstStaub","Nebel", "Wetterleuchte","Niederschlag","Gewitter","BoeeTornado","EndeRegSchnSchau","Sandsturm","Schnee","Nebel2","Sprühregen","Regen","Schneeregen","Schnee2","Schnee_mooNebel","Eiskorn","Regenschauer","Schneeregenschauer","Graupelschauer","Hagelschauer","Gewitter2"), right=FALSE)
 
+View(Wetterzustand)
+Wetterzustand[1:10]
+
+#keineBeobachtung 0
+#Bewölkung (1-3)
+#DunstStaub (4-10)
+#Nebel 11-12
+#Wetterleuchte 13
+#Niederschlag 14-
+#Gewitter 17
+#BoeeTornado 18-19
+#EndeRegSchnSchau 20-29
+#Sandsturm 30-35
+#Schnee 36-39
+#Nebel2 40-49
+#Sprühregen (50-59
+#Regen (60-67)
+#Schneeregen 68-69
+#Schnee2  70-75
+#Schnee_mooNebel 76-78
+#Eiskorn 79
+#Regenschauer (80-82
+#Schneeregenschauer 83-86
+#Graupelschauer 87-88
+#Hagelschauer 89-90
+#Gewitter2(91-99)
 
 ```
 
@@ -261,7 +294,7 @@ umsatzdaten$spl3=sample.split(umsatzdaten$Datum,SplitRatio=0.7)
 
 View(umsatzdaten)
 #Training data set
-train=subset(umsatzdaten, umsatzdaten$spl3==TRUE)
+train=subset(umsatzdaten, umsatzdaten$spl==TRUE)
 # where <i>spl== TRUE</i> means to add only those rows that have value true for spl in the training dataframe
 
 # you will see that this dataframe has all values where umsatzdaten$spl==TRUE
@@ -324,22 +357,24 @@ summary(mod8)
 
 glance(mod1)
 glance(mod2)
+glance(mod8)
+
 ```
 
 Preparation of Model Results
 ```{r}
-rbind(glance(mod1), glance(mod2), glance(mod3), glance(mod4), glance(mod5), glance(mod6), glance(mod7))
+rbind(glance(mod1), glance(mod2), glance(mod3), glance(mod4), glance(mod5), glance(mod6), glance(mod7), glance(mod8))
 ```
 
 Model Prediction Quality for the Training Data Using the Mean Absolute Error
 ```{r}
-rbind(mae(house_pricing_train$price, predict(mod1)),
-      mae(house_pricing_train$price, predict(mod2)),
-      mae(house_pricing_train$price, predict(mod3)),
-      mae(house_pricing_train$price, predict(mod4)),
-      mae(house_pricing_train$price, predict(mod5)),
-      mae(house_pricing_train$price, predict(mod6)),
-      mae(house_pricing_train$price, predict(mod7)))
+rbind(mae(train$Umsatz, predict(mod1)),
+      mae(train$Umsatz, predict(mod2)),
+      mae(train$Umsatz, predict(mod3)),
+      mae(train$Umsatz, predict(mod4)),
+      mae(train$Umsatz, predict(mod5)),
+      mae(train$Umsatz, predict(mod6)),
+      mae(train$Umsatz, predict(mod8)))
 ```
 
 
@@ -352,18 +387,36 @@ rbind(mape(house_pricing_train$price, predict(mod1)),
       mape(house_pricing_train$price, predict(mod5)),
       mape(house_pricing_train$price, predict(mod6)),
       mape(house_pricing_train$price, predict(mod7)))
+
+rbind(mape(train$Umsatz, predict(mod1)),
+      mape(train$Umsatz, predict(mod2)),
+      mape(train$Umsatz, predict(mod3)),
+      mape(train$Umsatz, predict(mod4)),
+      mape(train$Umsatz, predict(mod5)),
+      mape(train$Umsatz, predict(mod6)),
+      mape(train$Umsatz, predict(mod8)))
 ```
 
 Model Prediction Quality for the (Unknown) Test Data Using the Mean Absolute Percentage Error
 ```{r}
-rbind(mape(house_pricing_test$price, predict(mod1, newdata=house_pricing_test)),
-      mape(house_pricing_test$price, predict(mod2, newdata=house_pricing_test)),
-      mape(house_pricing_test$price, predict(mod3, newdata=house_pricing_test)),
-      mape(house_pricing_test$price, predict(mod4, newdata=house_pricing_test)),
-      mape(house_pricing_test$price, predict(mod5, newdata=house_pricing_test)),
-      mape(house_pricing_test$price, predict(mod6, newdata=house_pricing_test)),
-      mape(house_pricing_test$price, predict(mod7, newdata=house_pricing_test)))
+rbind(mape(test$Umsatz, predict(mod1, newdata=test)),
+      mape(test$Umsatz, predict(mod2, newdata=test)),
+      mape(test$Umsatz, predict(mod3, newdata=test)))
 
+    #mape(test$Umsatz, predict(mod4, newdata=test))),
+     # mape(test$Umsatz, predict(mod5, newdata=test)),
+      #mape(test$Umsatz, predict(mod6, newdata=test)),
+      #mape(test$Umsatz, predict(mod8, newdata=test)))
+
+      
+   
+#rbind(mape(house_pricing_test$price, predict(mod1, newdata=house_pricing_test)),
+#      mape(house_pricing_test$price, predict(mod2, newdata=house_pricing_test)),
+ #     mape(house_pricing_test$price, predict(mod3, newdata=house_pricing_test)),
+  #    mape(house_pricing_test$price, predict(mod4, newdata=house_pricing_test)),
+   #   mape(house_pricing_test$price, predict(mod5, newdata=house_pricing_test)),
+    #  mape(house_pricing_test$price, predict(mod6, newdata=house_pricing_test)),
+     # mape(house_pricing_test$price, predict(mod7, newdata=house_pricing_test)))
 
 ```
 
@@ -401,28 +454,6 @@ mape(test_dataset$price, pred_test)
 
 
 
-#TO DO
-### Installation von Python und der für TensorFlow benötigten Pakete (nur einmalig nötig) ###
-
-```{r}
-install.packages("reticulate")
-library(reticulate)
-
-# Installation von miniconda (falls nicht vorhanden)
-install_miniconda()
-
-# Anlegen einer speziellen Python Umgebung
-conda_create("r-reticulate")
-
-# Installieren der Pakete in der angelegten Umgebung
-conda_install("r-reticulate", "pandas")
-conda_install("r-reticulate", "numpy")
-conda_install("r-reticulate", "tensorflow")
-
-# Verwenden der speziellen Python Umgebung die zuvor erstellt wurde
-use_condaenv("r-reticulate")
-
-```
 
 #TO DO
 Estimation of Neural Net Data Preparation
@@ -492,7 +523,7 @@ get.norm_values <- function (.data, select_columns = NULL) {
 ### Datenimport ###
 ```{r}
 # Einlesen der Daten
-house_pricing <- read_csv("https://raw.githubusercontent.com/opencampus-sh/sose20-datascience/master/house_pricing_test.csv")
+#house_pricing <- read_csv("https://raw.githubusercontent.com/opencampus-sh/sose20-datascience/master/house_pricing_test.csv")
 
 ```
 
