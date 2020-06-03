@@ -92,15 +92,14 @@ Langes Wochendende Vorher und nachher
 #umsatzdaten$wochentag == "Saturday", umsatzdaten$holiday == "TRUE")
 #umsatzdaten$wochentag == "Sunday" & umsatzdaten$holiday == "TRUE"
 
-<<<<<<< HEAD
-=======
+
 ```
 Feiertag am Wochenende
 ```{r}
 isHoliday=
->>>>>>> 6aec528ec1bed185bd23b0b89179cd2cb288529c
+
 ```
-Feiertag am Wochenende
+Feiertag am Wochenende 
 ```{r}
 isHoliday=
 ```
@@ -221,13 +220,8 @@ Einbindung Wetterdaten
 ```{r}
 #umsatzdaten <- read_csv("umsatzdaten_gekuerzt.csv")
 
-<<<<<<< HEAD
 library(readr)
 library(dplyr)
-=======
-#library(readr)
-#ibrary(dplyr)
->>>>>>> 6aec528ec1bed185bd23b0b89179cd2cb288529c
 
 wetter <- read_csv("wetter.csv")
 View(wetter)
@@ -238,24 +232,20 @@ View(umsatzdaten)
 ## Umformen der numerischen Variable Windgeschwindigkeit in Faktorvariabel 
 umsatzdaten$Windgeschwindigkeit <- cut(umsatzdaten$Windgeschwindigkeit, breaks = c(0,10.7,20.7,37), labels=c("Brise", "Wind","Sturm"), right=FALSE)
 umsatzdaten$Windgeschwindigkeit[1:10]
-View(umsatzdaten$Windgeschwindigkeit)
-<<<<<<< HEAD
-=======
+View(umsatzdaten)
 
 
 ## Umformen der numerischen Variable Temperatur
 umsatzdaten$Temperatur<- cut(umsatzdaten$Temperatur, breaks = c(1,11,21,31,45), labels=c("kalt", "moderat", "sommerlich", "heiß"),right=FALSE)
-View(umsatzdaten$Temperatur)
+View(umsatzdaten) 
 
 #Wettercode - Umformen der numerischen Variable Wettercode in Faktorvariabel 
-Wetterzustand <- cut(umsatzdaten$Wettercode, breaks = c(0,1,4,11,13,14,17,18,20,30,36,40,50,60,68,70,76,79,80,83,87,89,91,99), labels=c("keineBeobachtung","Bewölkung", "DunstStaub","Nebel", "Wetterleuchte","Niederschlag","Gewitter","BoeeTornado","EndeRegSchnSchau","Sandsturm","Schnee","Nebel2","Sprühregen","Regen","Schneeregen","Schnee2","Schnee_mooNebel","Eiskorn","Regenschauer","Schneeregenschauer","Graupelschauer","Hagelschauer","Gewitter2"), right=FALSE)
+umsatzdaten$Wettercode <- cut(umsatzdaten$Wettercode, breaks = c(0,1,4,11,13,14,17,18,20,30,36,40,50,60,68,70,76,79,80,83,87,89,91,99), labels=c("keineBeobachtung","Bewölkung", "DunstStaub","Nebel", "Wetterleuchte","Niederschlag","Gewitter","BoeeTornado","EndeRegSchnSchau","Sandsturm","Schnee","Nebel2","Sprühregen","Regen","Schneeregen","Schnee2","Schnee_mooNebel","Eiskorn","Regenschauer","Schneeregenschauer","Graupelschauer","Hagelschauer","Gewitter2"), right=FALSE)
+Wettercode
 
-View(Wetterzustand)
-Wetterzustand[1:10]
+View(umsatzdaten) 
+umsatzdaten$Wetterzustand <- !is.na(umsatzdaten$Wetterzustand)
 
-umsatzdaten$wetterzustand <- Wetterzustand
-
->>>>>>> 6aec528ec1bed185bd23b0b89179cd2cb288529c
 
 #keineBeobachtung 0
 #Bewölkung (1-3)
@@ -281,39 +271,9 @@ umsatzdaten$wetterzustand <- Wetterzustand
 #Hagelschauer 89-90
 #Gewitter2(91-99)
 
-## Umformen der numerischen Variable Temperatur
-umsatzdaten$Temperatur<- cut(umsatzdaten$Temperatur, breaks = c(1,11,21,31,45), labels=c("kalt", "moderat", "sommerlich", "heiß"),right=FALSE)
-View(umsatzdaten$Temperatur)
 
-#Wettercode - Umformen der numerischen Variable Wettercode in Faktorvariabel 
-Wetterzustand <- cut(umsatzdaten$Wettercode, breaks = c(0,1,4,11,13,14,17,18,20,30,36,40,50,60,68,70,76,79,80,83,87,89,91,99), labels=c("keineBeobachtung","Bewölkung", "DunstStaub","Nebel", "Wetterleuchte","Niederschlag","Gewitter","BoeeTornado","EndeRegSchnSchau","Sandsturm","Schnee","Nebel2","Sprühregen","Regen","Schneeregen","Schnee2","Schnee_mooNebel","Eiskorn","Regenschauer","Schneeregenschauer","Graupelschauer","Hagelschauer","Gewitter2"), right=FALSE)
+View(umsatzdaten)
 
-View(Wetterzustand)
-Wetterzustand[1:10]
-
-#keineBeobachtung 0
-#Bewölkung (1-3)
-#DunstStaub (4-10)
-#Nebel 11-12
-#Wetterleuchte 13
-#Niederschlag 14-
-#Gewitter 17
-#BoeeTornado 18-19
-#EndeRegSchnSchau 20-29
-#Sandsturm 30-35
-#Schnee 36-39
-#Nebel2 40-49
-#Sprühregen (50-59
-#Regen (60-67)
-#Schneeregen 68-69
-#Schnee2  70-75
-#Schnee_mooNebel 76-78
-#Eiskorn 79
-#Regenschauer (80-82
-#Schneeregenschauer 83-86
-#Graupelschauer 87-88
-#Hagelschauer 89-90
-#Gewitter2(91-99)
 
 ```
 
@@ -384,11 +344,19 @@ mod3 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag), umsatzdaten)
 mod4 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche, umsatzdaten)
 
 mod5 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur, umsatzdaten)
+mod6 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+Windgeschwindigkeit, umsatzdaten)
+mod7 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+Windgeschwindigkeit+dayoff_after, umsatzdaten)
+mod8 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+Windgeschwindigkeit+dayoff_after+dayoff_b4, umsatzdaten)
+mod9 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+Windgeschwindigkeit+dayoff_after+dayoff_b4+jahreszeit, umsatzdaten)
+mod10 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+Windgeschwindigkeit+dayoff_after+dayoff_b4+jahreszeit+Bewoelkung, umsatzdaten)
+
+
 mod6 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+holiday, umsatzdaten) 
 #mod7 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+holiday+as.factor(jahreszeit), umsatzdaten) #Fehler
 
 mod8 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+holiday+Bewoelkung, umsatzdaten) 
 
+mod9  <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+holiday+Bewoelkung+as.logical(dayoff_after)+ as.logical(dayoff_b4) + schulferien, umsatzdaten) 
 ```
 
 
@@ -401,8 +369,10 @@ summary(mod3)
 summary(mod4)
 summary(mod5)
 summary(mod6)
-#summary(mod7)
+summary(mod7)
 summary(mod8)
+summary(mod9)
+summary(mod10)
 ```
 
 ```{r}
@@ -478,30 +448,31 @@ rbind(mape(test$Umsatz, predict(mod1, newdata=test)),
 
 # Estimation of an SVM with optimized weighting parameters and given standard hyper parameters
 # Typically not used; instead, the function svm_tune is used in order to also get a model with optimized hyper parameters
-model_svm <- svm(Umsatz ~ wochentag, train_dataset)
+model_svm <- svm(Umsatz ~ Warengruppe, train_dataset)
+model_svm <- svm(Umsatz ~ Warengruppe, train)
 ```
 
 ```{r}
 # Estimation of various SVM (each with optimized weighting parameters) using systematically varied hyper parameters (typically called 'grid search' approach) and cross validation
 # the resulting object includes the optimal model in the element named 'best.model'
-svm_tune <- tune(svm, Umsatz ~ wochentag, data=train_dataset,
+svm_tune <- tune(svm, Umsatz ~ Warengruppe, data=train,
                  ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
 ```
 
 ## Checking the Prediction Quality -- TO DO!
 ```{r}
 # Calculating the prediction for the training data using the best model according to the grid search
-pred_train <- predict(svm_tune$best.model, train_dataset)
+pred_train <- predict(svm_tune$best.model, train)
 # Calculating the prediction quality for the training data using the MAPE
-mape(train_dataset$price, pred_train)
+mape(train$Umsatz, pred_train)
 ```
 
 
 ```{r}
 # Calculating the prediction for the test data using the best model according to the grid search
-pred_test <- predict(svm_tune$best.model, test_dataset)
+pred_test <- predict(svm_tune$best.model, test)
 # Calculating the prediction quality for the training data using the MAPE
-mape(test_dataset$price, pred_test)
+mape(test$Umsatz, pred_test)
 ```
 
 
