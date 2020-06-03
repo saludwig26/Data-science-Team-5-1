@@ -71,7 +71,7 @@ umsatzdaten$jahreszeit <- factor(format(yq, "%q"), levels = 1:4,
 Erstellung der Variable mit Feiertage 
 ```{r}
 #Einbinden der Bibliothek mit dr Funktion isHoliday:
-#detach("package:timeDate", unload = TRUE)
+detach("package:timeDate", unload = TRUE)
 library(RQuantLib)
 
 #Zeige deutsche Feiertage an:
@@ -217,7 +217,7 @@ kiwo <- read_csv("kiwo.csv")
 umsatzdaten$KielerWoche <- NULL
 umsatzdaten <- left_join(umsatzdaten, kiwo)
 umsatzdaten$KielerWoche <- !is.na(umsatzdaten$KielerWoche)
-#View(umsatzdaten)
+View(umsatzdaten)
 ```
 
 
@@ -247,7 +247,7 @@ View(umsatzdaten)
 
 
 #Abweichung der Temperatur von der durchschnittstemperatur in dem jeweiligen Monat
-average
+#average
 =======
 
 
@@ -295,22 +295,11 @@ umsatzdaten$Wetterzustand <- !is.na(umsatzdaten$Wetterzustand)
 #Hagelschauer 89-90
 #Gewitter2(91-99)
 
-<<<<<<< HEAD
-
-View(umsatzdaten)
-
-=======
-
-View(umsatzdaten)
-
->>>>>>> baf365bd4af70a91a8c5d67bd1c199029bd948eb
-
 ```
 
 
 
 ```Overfitting with linear regression
-ToDo: Noch updaten!!
 Importing Function Packages
 
 ```{r}
@@ -368,6 +357,7 @@ Estimating (Training) Models
 
 (Alle Warengruppen getrennt anschauen)
 ```{r}
+mod0 <- lm(Umsatz ~ , umsatzdaten)
 mod1 <- lm(Umsatz ~ wochentag, umsatzdaten)
 mod2 <- lm(Umsatz ~ as.factor(Warengruppe), umsatzdaten)
 mod3 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag), umsatzdaten)
@@ -382,9 +372,6 @@ mod10 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ 
 mod11 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+Windgeschwindigkeit+dayoff_after+dayoff_b4+jahreszeit+Bewoelkung+holiday, umsatzdaten)
 mod12 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+Windgeschwindigkeit+dayoff_after+dayoff_b4+jahreszeit+Bewoelkung+holiday+dayoff_after_holiday, umsatzdaten)
 mod13 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+Windgeschwindigkeit+dayoff_after+dayoff_b4+jahreszeit+Bewoelkung+holiday+dayoff_after_holiday+dayoff_b4_holiday, umsatzdaten)
-=======
-
->>>>>>> baf365bd4af70a91a8c5d67bd1c199029bd948eb
 
 mod6 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+holiday, umsatzdaten) 
 #mod7 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+holiday+as.factor(jahreszeit), umsatzdaten) #Fehler
@@ -396,6 +383,7 @@ mod9  <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ 
 
 
 ```{r}
+summary(mod0)
 summary(mod1)
 plot(mod1)
 summary(mod2)
