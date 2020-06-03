@@ -71,7 +71,7 @@ umsatzdaten$jahreszeit <- factor(format(yq, "%q"), levels = 1:4,
 Erstellung der Variable mit Feiertage 
 ```{r}
 #Einbinden der Bibliothek mit dr Funktion isHoliday:
-detach("package:timeDate", unload = TRUE)
+#detach("package:timeDate", unload = TRUE)
 library(RQuantLib)
 
 #Zeige deutsche Feiertage an:
@@ -218,7 +218,7 @@ umsatzdaten$KielerWoche <- !is.na(umsatzdaten$KielerWoche)
 
 Einbindung Wetterdaten
 ```{r}
-#umsatzdaten <- read_csv("umsatzdaten_gekuerzt.csv")
+umsatzdaten <- read_csv("umsatzdaten_gekuerzt.csv")
 
 library(readr)
 library(dplyr)
@@ -236,20 +236,21 @@ View(umsatzdaten)
 
 
 ## Umformen der numerischen Variable Temperatur
-umsatzdaten$Temperatur<- cut(umsatzdaten$Temperatur, breaks = c(1,11,21,31,45), labels=c("kalt", "moderat", "sommerlich", "heiß"),right=FALSE)
+umsatzdaten$Temperatur <- as.numeric(as.character(umsatzdaten$Temperatur))
+umsatzdaten$Temperatur<- cut(umsatzdaten$Temperatur, breaks = c(-20,1,11,21,31,45), labels=c("eisig", "kalt", "moderat", "sommerlich", "heiß"), right=FALSE)
 View(umsatzdaten) 
-<<<<<<< HEAD
+
 
 #Abweichung der Temperatur von der durchschnittstemperatur in dem jeweiligen Monat
 average
 =======
->>>>>>> baf365bd4af70a91a8c5d67bd1c199029bd948eb
+
 
 #Wettercode - Umformen der numerischen Variable Wettercode in Faktorvariabel 
 umsatzdaten$Wettercode <- cut(umsatzdaten$Wettercode, breaks = c(0,1,4,11,13,14,17,18,20,30,36,40,50,60,68,70,76,79,80,83,87,89,91,99), labels=c("keineBeobachtung","Bewölkung", "DunstStaub","Nebel", "Wetterleuchte","Niederschlag","Gewitter","BoeeTornado","EndeRegSchnSchau","Sandsturm","Schnee","Nebel2","Sprühregen","Regen","Schneeregen","Schnee2","Schnee_mooNebel","Eiskorn","Regenschauer","Schneeregenschauer","Graupelschauer","Hagelschauer","Gewitter2"), right=FALSE)
 Wettercode
 
-<<<<<<< HEAD
+
 umsatzdaten$Wettercode[is.na(umsatzdaten$Wettercode)]= "FALSE"
 
 umsatzdaten$Wettercode %>%
@@ -258,13 +259,12 @@ umsatzdaten$Wettercode %>%
 umsatzdaten$Wettercode %>% replace_na("unknown")
 
 View(umsatzdaten) 
-umsatzdaten$Wetterzustand <- !is.na(umsatzdaten$Wetterzustand)
+umsatzdaten$Wettercode <- !is.na(umsatzdaten$Wettercode)
 
 =======
 View(umsatzdaten) 
 umsatzdaten$Wetterzustand <- !is.na(umsatzdaten$Wetterzustand)
 
->>>>>>> baf365bd4af70a91a8c5d67bd1c199029bd948eb
 
 #keineBeobachtung 0
 #Bewölkung (1-3)
