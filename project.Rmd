@@ -71,7 +71,7 @@ umsatzdaten$jahreszeit <- factor(format(yq, "%q"), levels = 1:4,
 Erstellung der Variable mit Feiertage 
 ```{r}
 #Einbinden der Bibliothek mit dr Funktion isHoliday:
-#detach("package:timeDate", unload = TRUE)
+detach("package:timeDate", unload = TRUE)
 library(RQuantLib)
 
 #Zeige deutsche Feiertage an:
@@ -84,7 +84,7 @@ addHolidays("Germany", further_holidays)
 #Erstelle neue Spalte mit dem Wert für Feiertag (Wochenenden ausgenommen):
 umsatzdaten$holiday <- isHoliday("Germany", umsatzdaten$Datum) & !isWeekend("Germany", umsatzdaten$Datum)
 
-#View(umsatzdaten)
+View(umsatzdaten)
 ```
 
 Langes Wochendende Vorher und nachher
@@ -152,7 +152,7 @@ umsatzdaten <- left_join(umsatzdaten, dayoff_b4_holiday)
 umsatzdaten$dayoff_after_holiday <- !is.na(umsatzdaten$dayoff_after_holiday)
 umsatzdaten$dayoff_b4_holiday <- !is.na(umsatzdaten$dayoff_b4_holiday)
 
-
+View(umsatzdaten)
 ```
 
 Schulferien
@@ -239,9 +239,19 @@ View(umsatzdaten)
 umsatzdaten$Temperatur<- cut(umsatzdaten$Temperatur, breaks = c(1,11,21,31,45), labels=c("kalt", "moderat", "sommerlich", "heiß"),right=FALSE)
 View(umsatzdaten) 
 
+#Abweichung der Temperatur von der durchschnittstemperatur in dem jeweiligen Monat
+average
+
 #Wettercode - Umformen der numerischen Variable Wettercode in Faktorvariabel 
 umsatzdaten$Wettercode <- cut(umsatzdaten$Wettercode, breaks = c(0,1,4,11,13,14,17,18,20,30,36,40,50,60,68,70,76,79,80,83,87,89,91,99), labels=c("keineBeobachtung","Bewölkung", "DunstStaub","Nebel", "Wetterleuchte","Niederschlag","Gewitter","BoeeTornado","EndeRegSchnSchau","Sandsturm","Schnee","Nebel2","Sprühregen","Regen","Schneeregen","Schnee2","Schnee_mooNebel","Eiskorn","Regenschauer","Schneeregenschauer","Graupelschauer","Hagelschauer","Gewitter2"), right=FALSE)
 Wettercode
+
+umsatzdaten$Wettercode[is.na(umsatzdaten$Wettercode)]= "FALSE"
+
+umsatzdaten$Wettercode %>%
+  replace_na(list(Wettercode = FALSE))
+
+umsatzdaten$Wettercode %>% replace_na("unknown")
 
 View(umsatzdaten) 
 umsatzdaten$Wetterzustand <- !is.na(umsatzdaten$Wetterzustand)
@@ -342,14 +352,15 @@ mod1 <- lm(Umsatz ~ wochentag, umsatzdaten)
 mod2 <- lm(Umsatz ~ as.factor(Warengruppe), umsatzdaten)
 mod3 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag), umsatzdaten)
 mod4 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche, umsatzdaten)
-
 mod5 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur, umsatzdaten)
 mod6 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+Windgeschwindigkeit, umsatzdaten)
 mod7 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+Windgeschwindigkeit+dayoff_after, umsatzdaten)
 mod8 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+Windgeschwindigkeit+dayoff_after+dayoff_b4, umsatzdaten)
 mod9 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+Windgeschwindigkeit+dayoff_after+dayoff_b4+jahreszeit, umsatzdaten)
 mod10 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+Windgeschwindigkeit+dayoff_after+dayoff_b4+jahreszeit+Bewoelkung, umsatzdaten)
-
+mod11 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+Windgeschwindigkeit+dayoff_after+dayoff_b4+jahreszeit+Bewoelkung+holiday, umsatzdaten)
+mod12 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+Windgeschwindigkeit+dayoff_after+dayoff_b4+jahreszeit+Bewoelkung+holiday+dayoff_after_holiday, umsatzdaten)
+mod13 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+Windgeschwindigkeit+dayoff_after+dayoff_b4+jahreszeit+Bewoelkung+holiday+dayoff_after_holiday+dayoff_b4_holiday, umsatzdaten)
 
 mod6 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+holiday, umsatzdaten) 
 #mod7 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+holiday+as.factor(jahreszeit), umsatzdaten) #Fehler
@@ -373,19 +384,22 @@ summary(mod7)
 summary(mod8)
 summary(mod9)
 summary(mod10)
+summary(mod11)
+summary(mod12)
+summary(mod13)
 ```
 
 ```{r}
 
 glance(mod1)
 glance(mod2)
-glance(mod8)
+glance(mod13)
 
 ```
 
 Preparation of Model Results
 ```{r}
-rbind(glance(mod1), glance(mod2), glance(mod3), glance(mod4), glance(mod5), glance(mod6), glance(mod7), glance(mod8))
+rbind(glance(mod1), glance(mod2), glance(mod3), glance(mod4), glance(mod5), glance(mod6), glance(mod7), glance(mod8) ,glance(mod9), glance(mod10), glance(mod11),glance(mod12), glance(mod13), )
 ```
 
 Model Prediction Quality for the Training Data Using the Mean Absolute Error
