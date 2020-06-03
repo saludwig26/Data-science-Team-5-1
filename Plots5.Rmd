@@ -5,17 +5,14 @@ date: "5/28/2020"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
 
 ## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-
+1 brot
+2 broetchen
+3 croissant
+4 konditorei
+5 kuchen
+6 saisonbrot
 
 Einbinden benoetigter Bibliotheken
 ```{r}
@@ -26,89 +23,105 @@ library(dplyr)
 library(zoo)
 library(Metrics)
 ```
-
-
-Einlesen der Umsatzdaten
 ```{r}
-umsatzdaten <- read_csv("umsatzdaten_gekuerzt.csv")
+View(umsatzdaten)
 ```
 
-
-Erstellung der Variablen
-```{r}
-# WOCHENTAG: 
-#Berechnung der Wochentage
-umsatzdaten$wochentag <- weekdays(umsatzdaten$Datum)
-
-# Umwandlung von 'wochentag" in eine Faktor-Variable mit einer vorgegeben Sortierung der Level (Kategorien)
-umsatzdaten$wochentag <- factor(umsatzdaten$wochentag, levels=c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
-
-# JAHRESZEIT: 
-#Berechnung der Jahresqrt
-yq <- as.yearqtr(as.yearmon(umsatzdaten$Datum, "%m/%d/%Y") + 1/12)
-# Berechnung der Jahreszeit
-umsatzdaten$jahreszeit <- factor(format(yq, "%q"), levels = 1:4, 
-      labels = c("Winter", "Frueling", "Sommer", "Herbst"))
-
-# FEIERTAGEN: 
-#Einbinden der Bibliothek mit dr Funktion isHoliday:
-package:timeDate
-#detach("package:timeDate", unload = TRUE)
-library(RQuantLib)
-
-#Zeige deutsche Feiertage an:
-getHolidayList("Germany", as.Date("2013-01-01"), as.Date("2020-01-01"))
-
-#Füge die Feiertage "Himmelfahrt", "Pfingsten", "Tag deutscher Einheit" und "Reformationstag" zwischen 2013 und 2022 hinzu:
-further_holidays <- (as.Date(c("2013-10-03", "2014-10-03", "2015-10-03", "2016-10-03", "2017-10-03", "2018-10-03", "2019-10-03", "2020-10-03", "2021-10-03", "2017-10-31", "2018-10-31", "2019-10-31", "2020-10-31", "2021-10-31", "2022-10-31", "2013-05-09", "2014-05-29", "2015-05-14", "2016-05-05", "2017-05-25", "2018-05-10", "2019-05-30", "2020-05-21", "2021-05-13", "2022-05-26", "2013-05-20", "2014-06-09", "2015-05-25", "2016-05-16", "2017-06-05", "2018-05-21", "2019-06-10", "2020-06-01", "2021-05-24", "2022-06-06", "2013-12-26", "2014-12-26", "2015-12-26", "2016-12-26", "2017-12-26", "2018-12-26", "2019-12-26", "2020-12-26", "2021-12-26", "2022-12-26")))
-addHolidays("Germany", further_holidays)
-
-# GESCHLOSSEN: 
-#hat der Bäcker an manchen Tagen geschlossen = kein Umsatz
-#Vorher/nachher mehr umsatz
-#Erstelle neue Spalte mit dem Wert für Feiertag (Wochenenden ausgenommen):
-umsatzdaten$holiday <- isHoliday("Germany", umsatzdaten$Datum) & !isWeekend("Germany", umsatzdaten$Datum)
-
-detach("package:RQuantLib", unload = TRUE)
-library(timeDate)
-all_dates <- tibble(Datum = as.Date(timeSequence(as.Date("2013-07-01"),as.Date("2019-06-03"))))
-missing_dates <- anti_join(all_dates, umsatzdaten)
-
-
-detach("package:timeDate", unload = TRUE)
-library(RQuantLib)
-missing_dates$holiday <- isHoliday("Germany", missing_dates$Datum)
-missing_dates$WochentagMoFr <- !isWeekend("Germany", missing_dates$Datum)
-
-#KIWO:
-#umsatzdaten <- read_csv("umsatzdaten_gekuerzt.csv")
-kiwo <- read_csv("kiwo.csv")
-umsatzdaten <- left_join(umsatzdaten, kiwo)
-```
-```{r}
-#Einbindung Wetterdaten
-wetter <- read_csv("wetter.csv")
-umsatzdaten<- left_join(umsatzdaten, wetter)
-```
-
-1 brot
-2 broetchen
-3 croissant
-4 konditorei
-5 kuchen
-6 saisonbrot
 ```{r}
 #UMSATZ ~ WOCHENTAG
 ggplot(umsatzdaten) +
   facet_wrap(~Warengruppe) +
-  geom_point(aes(x = wochentag, y = Umsatz, colour=holiday), size=0.1) 
+  geom_point(aes(x = wochentag, y = Umsatz, colour=holiday), size=0.1) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+ggplot(umsatzdaten) +
+  facet_wrap(~Warengruppe) +
+  geom_boxplot(aes(x = holiday, y = Umsatz), size=0.01) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+```{r}
+#UMSATZ ~ SCHULFERIEN
+ggplot(umsatzdaten) +
+  facet_wrap(~Warengruppe) +
+  geom_point(aes(x = wochentag, y = Umsatz, colour=schulferien), size=0.1) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+ggplot(umsatzdaten) +
+  facet_wrap(~Warengruppe) +
+  geom_boxplot(aes(x = schulferien, y = Umsatz), size=0.01) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+```
+```{r}
+ggplot(umsatzdaten) +
+  facet_wrap(~Warengruppe) +
+  geom_point(aes(x = wochentag, y = Umsatz, colour=dayoff_after), size=0.01) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+ggplot(umsatzdaten) +
+  facet_wrap(~Warengruppe) +
+  geom_boxplot(aes(x = dayoff_after, y = Umsatz), size=0.01) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+ggplot(umsatzdaten) +
+  facet_wrap(~Warengruppe) +
+  geom_point(aes(x = wochentag, y = Umsatz, colour=dayoff_b4), size=0.01) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+ggplot(umsatzdaten) +
+  facet_wrap(~Warengruppe) +
+  geom_boxplot(aes(x = dayoff_b4, y = Umsatz), size=0.01) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+ggplot(umsatzdaten) +
+  facet_wrap(~Warengruppe) +
+  geom_point(aes(x = wochentag, y = Umsatz, colour=dayoff_b4_holiday), size=0.01) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+ggplot(umsatzdaten) +
+  facet_wrap(~Warengruppe) +
+  geom_boxplot(aes(x = dayoff_b4_holiday, y = Umsatz), size=0.01) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+ggplot(umsatzdaten) +
+  facet_wrap(~Warengruppe) +
+  geom_point(aes(x = wochentag, y = Umsatz, colour=dayoff_after_holiday), size=0.01) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+ggplot(umsatzdaten) +
+  facet_wrap(~Warengruppe) +
+  geom_boxplot(aes(x = dayoff_after_holiday, y = Umsatz), size=0.01) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+```{r}
+ggplot(umsatzdaten) +
+  facet_wrap(~Warengruppe) +
+  geom_boxplot(aes(x = wochentag, y = Umsatz, colour=jahreszeit), size=0.1) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+ggplot(umsatzdaten) +
+  facet_wrap(~Warengruppe) +
+  geom_boxplot(aes(x = wochentag, y = Umsatz, colour=KielerWoche), size=0.1) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+ggplot(umsatzdaten) +
+  facet_wrap(~Warengruppe) + 
+  geom_boxplot(aes(x = jahreszeit, y = Umsatz, colour=Temperatur), size=0.1) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+
+```{r}
+
+ggplot(umsatzdaten) +
+  facet_wrap(~Warengruppe) +
+  geom_point(aes(x = Temperatur, y = Umsatz, colour=Windgeschwindigkeit), size=0.1) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+ggplot(umsatzdaten) +
+  facet_wrap(~Warengruppe) +
+  geom_point(aes(x = Wetterzustand, y = Umsatz, colour=Temperatur), size=0.1) + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + coord_cartesian(xlim = c(), ylim = c(0, 2000))
+```
+```
+
+```{r}
+#UMSATZ ~ WOCHENTAG
+ggplot(umsatzdaten) +
+  facet_wrap(~Warengruppe) +
+  geom_boxplot(aes(x = wochentag, y = Umsatz, colour=holiday), size=0.1) 
 
 ```
 ```{r}
 #UMSATZ ~ JAHRESZEIT
 ggplot(umsatzdaten) +
   facet_wrap(~Warengruppe) +
-  geom_point(aes(x = jahreszeit, y = Umsatz), size=0.1)
+  geom_boxplot(aes(x = jahreszeit, y = Umsatz), size=0.1)
 ```
 
 
