@@ -107,8 +107,9 @@ ggplot(umsatzdaten) +
 ggplot(umsatzdaten) +
   facet_wrap(~Warengruppe) +
   geom_point(aes(x = Wetterzustand, y = Umsatz, colour=Temperatur), size=0.1) + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + coord_cartesian(xlim = c(), ylim = c(0, 2000))
+
 ```
-```
+
 
 ```{r}
 #UMSATZ ~ WOCHENTAG
@@ -288,44 +289,35 @@ ggplot(my_sum) +
 ```
 ```
 
-```{r}
-
-```
-
-
-
 Balkendiagramm der Umsätze je Warengruppe 1-6 je Wochentag 
-1 brot
-2 broetchen
-3 croissant
-4 konditorei
-5 kuchen
-6 saisonbrot
 
 ```{r}
+
 brot <- umsatzdaten[umsatzdaten$Warengruppe == '1', ]
 ggplot(brot) + ggtitle('Brot') +
-  geom_bar(aes(x = wochentag, y = Umsatz), stat = "identity")
+  geom_boxplot(aes(x = wochentag, y = Umsatz)) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
 broetchen <- umsatzdaten[umsatzdaten$Warengruppe == '2', ]
 ggplot(broetchen) + ggtitle('Broetchen') +
-  geom_bar(aes(x = wochentag, y = Umsatz), stat = "identity")
+  geom_boxplot(aes(x = wochentag, y = Umsatz)) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
 croissant <- umsatzdaten[umsatzdaten$Warengruppe == '3', ]
 ggplot(croissant) + ggtitle('Croissant') +
-  geom_bar(aes(x = wochentag, y = Umsatz), stat = "identity")
+  geom_boxplot(aes(x = wochentag, y = Umsatz)) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
 konditorei <- umsatzdaten[umsatzdaten$Warengruppe == '4', ]
 ggplot(konditorei) + ggtitle('Konditorei') +
-  geom_bar(aes(x = wochentag, y = Umsatz), stat = "identity")
+  geom_boxplot(aes(x = wochentag, y = Umsatz)) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
 kuchen <- umsatzdaten[umsatzdaten$Warengruppe == '5', ]
 ggplot(kuchen) + ggtitle('Kuchen') +
-  geom_bar(aes(x = wochentag, y = Umsatz), stat = "identity")
+  geom_boxplot(aes(x = wochentag, y = Umsatz)) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+
 
 saisonbrot <- umsatzdaten[umsatzdaten$Warengruppe == '6', ]
 ggplot(saisonbrot) + ggtitle('Saisonbrot') +
-  geom_bar(aes(x = wochentag, y = Umsatz), stat = "identity")
+  geom_boxplot(aes(x = wochentag, y = Umsatz)) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
 ```
 
@@ -333,6 +325,7 @@ ggplot(saisonbrot) + ggtitle('Saisonbrot') +
 ```{r}
 
 # Berechnung von Mittelwerten, Standardabweichungen, Standardfehlern und Konfidenzintervallen
+
 #WOCHENTAG
 brot_sum <- brot %>%
   group_by(wochentag) %>%
@@ -344,11 +337,87 @@ brot_sum <- brot %>%
   mutate( se=sd/sqrt(n))  %>%
   mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
 
+broetchen_sum <- broetchen %>%
+  group_by(wochentag) %>%
+  summarise(
+    n=n(),
+    mean=mean(Umsatz),
+    sd=sd(Umsatz)
+  ) %>%
+  mutate( se=sd/sqrt(n))  %>%
+  mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+
+croissant_sum <- croissant %>%
+  group_by(wochentag) %>%
+  summarise(
+    n=n(),
+    mean=mean(Umsatz),
+    sd=sd(Umsatz)
+  ) %>%
+  mutate( se=sd/sqrt(n))  %>%
+  mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+
+konditorei_sum <- konditorei %>%
+  group_by(wochentag) %>%
+  summarise(
+    n=n(),
+    mean=mean(Umsatz),
+    sd=sd(Umsatz)
+  ) %>%
+  mutate( se=sd/sqrt(n))  %>%
+  mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+
+kuchen_sum <- kuchen %>%
+  group_by(wochentag) %>%
+  summarise(
+    n=n(),
+    mean=mean(Umsatz),
+    sd=sd(Umsatz)
+  ) %>%
+  mutate( se=sd/sqrt(n))  %>%
+  mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+
+saisonbrot_sum <- saisonbrot %>%
+  group_by(wochentag) %>%
+  summarise(
+    n=n(),
+    mean=mean(Umsatz),
+    sd=sd(Umsatz)
+  ) %>%
+  mutate( se=sd/sqrt(n))  %>%
+  mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+
+#WOCHENTAG
 # Confidence Interval
 ggplot(brot_sum) +
   geom_bar( aes(x=wochentag, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
   geom_errorbar( aes(x=wochentag, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="orange", alpha=0.9, size=1.5) +
   ggtitle("Brot / confidence interval") 
+
+ggplot(broetchen_sum) +
+  geom_bar( aes(x=wochentag, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=wochentag, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="orange", alpha=0.9, size=1.5) +
+  ggtitle("Broetchen / confidence interval") 
+
+ggplot(croissant_sum) +
+  geom_bar( aes(x=wochentag, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=wochentag, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="orange", alpha=0.9, size=1.5) +
+  ggtitle("Croissant / confidence interval") 
+
+ggplot(konditorei_sum) +
+  geom_bar( aes(x=wochentag, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=wochentag, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="orange", alpha=0.9, size=1.5) +
+  ggtitle("Konditorei / confidence interval") 
+
+ggplot(kuchen_sum) +
+  geom_bar( aes(x=wochentag, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=wochentag, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="orange", alpha=0.9, size=1.5) +
+  ggtitle("Kuchen / confidence interval") 
+
+ggplot(saisonbrot_sum) +
+  geom_bar( aes(x=wochentag, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=wochentag, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="orange", alpha=0.9, size=1.5) +
+  ggtitle("Saisonbrot / confidence interval") 
 
 #HOLIDAY
 # Berechnung von Mittelwerten, Standardabweichungen, Standardfehlern und Konfidenzintervallen
@@ -362,11 +431,88 @@ brot_sum <- brot %>%
   mutate( se=sd/sqrt(n))  %>%
   mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
 
-# Confidence Interval
 ggplot(brot_sum) +
   geom_bar( aes(x=holiday, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
   geom_errorbar( aes(x=holiday, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="orange", alpha=0.9, size=1.5) +
   ggtitle("Brot / confidence interval") 
+
+
+broetchen_sum <- broetchen %>%
+  group_by(holiday) %>%
+  summarise(
+    n=n(),
+    mean=mean(Umsatz),
+    sd=sd(Umsatz)
+  ) %>%
+  mutate( se=sd/sqrt(n))  %>%
+  mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+
+ggplot(broetchen_sum) +
+  geom_bar( aes(x=holiday, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=holiday, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="orange", alpha=0.9, size=1.5) +
+  ggtitle("Broetchen / confidence interval") 
+
+croissant_sum <- croissant %>%
+  group_by(holiday) %>%
+  summarise(
+    n=n(),
+    mean=mean(Umsatz),
+    sd=sd(Umsatz)
+  ) %>%
+  mutate( se=sd/sqrt(n))  %>%
+  mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+
+ggplot(croissant_sum) +
+  geom_bar( aes(x=holiday, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=holiday, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="orange", alpha=0.9, size=1.5) +
+  ggtitle("croissant / confidence interval") 
+
+konditorei_sum <- konditorei %>%
+  group_by(holiday) %>%
+  summarise(
+    n=n(),
+    mean=mean(Umsatz),
+    sd=sd(Umsatz)
+  ) %>%
+  mutate( se=sd/sqrt(n))  %>%
+  mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+
+ggplot(konditorei_sum) +
+  geom_bar( aes(x=holiday, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=holiday, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="orange", alpha=0.9, size=1.5) +
+  ggtitle("Konditorei / confidence interval") 
+
+kuchen_sum <- kuchen %>%
+  group_by(holiday) %>%
+  summarise(
+    n=n(),
+    mean=mean(Umsatz),
+    sd=sd(Umsatz)
+  ) %>%
+  mutate( se=sd/sqrt(n))  %>%
+  mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+
+ggplot(kuchen_sum) +
+  geom_bar( aes(x=holiday, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=holiday, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="orange", alpha=0.9, size=1.5) +
+  ggtitle("Kuchen / confidence interval") 
+
+saisonbrot_sum <- saisonbrot %>%
+  group_by(holiday) %>%
+  summarise(
+    n=n(),
+    mean=mean(Umsatz),
+    sd=sd(Umsatz)
+  ) %>%
+  mutate( se=sd/sqrt(n))  %>%
+  mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+
+ggplot(saisonbrot_sum) +
+  geom_bar( aes(x=holiday, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=holiday, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="orange", alpha=0.9, size=1.5) +
+  ggtitle("Saisonbrot / confidence interval") 
+
+
 
 # Berechnung von Mittelwerten, Standardabweichungen, Standardfehlern und Konfidenzintervallen
 #JAHRESZEIT
@@ -387,17 +533,4 @@ ggplot(brot_sum) +
   ggtitle("Brot / confidence interval") 
 ```
 
-
-Jahreszeit
-```{r}
-
-```
-
-
-
-```{r}
-# Libraries
-
-
-```
 
