@@ -87,12 +87,17 @@ umsatzdaten$holiday <- isHoliday("Germany", umsatzdaten$Datum) & !isWeekend("Ger
 View(umsatzdaten)
 ```
 
-Langes Wochendende Vorher und nachher
+Langes Wochendende (Liegt vor dem Saturday oder nach dem Sunday ein Feiertag? bzw. ist Montag oder Freitag ein Feiertag?)
 ```{r}
-#umsatzdaten$wochentag == "Saturday", umsatzdaten$holiday == "TRUE")
-#umsatzdaten$wochentag == "Sunday" & umsatzdaten$holiday == "TRUE"
+#Ist Monday oder Freitag == umsatzdaten$holiday == "TRUE"
+umsatzdaten$VerlaengertesWE_Mo<- umsatzdaten$wochentag == "Monday" & umsatzdaten$holiday == "TRUE"
+umsatzdaten$VerlaengertesWE_Fr<- umsatzdaten$wochentag == "Friday" & umsatzdaten$holiday == "TRUE"
+ 
+View(umsatzdaten)
 
 
+  
+  
 ```
 Feiertag am Wochenende
 ```{r}
