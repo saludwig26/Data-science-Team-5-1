@@ -238,14 +238,18 @@ View(umsatzdaten)
 ## Umformen der numerischen Variable Temperatur
 umsatzdaten$Temperatur<- cut(umsatzdaten$Temperatur, breaks = c(1,11,21,31,45), labels=c("kalt", "moderat", "sommerlich", "heiß"),right=FALSE)
 View(umsatzdaten) 
+<<<<<<< HEAD
 
 #Abweichung der Temperatur von der durchschnittstemperatur in dem jeweiligen Monat
 average
+=======
+>>>>>>> baf365bd4af70a91a8c5d67bd1c199029bd948eb
 
 #Wettercode - Umformen der numerischen Variable Wettercode in Faktorvariabel 
 umsatzdaten$Wettercode <- cut(umsatzdaten$Wettercode, breaks = c(0,1,4,11,13,14,17,18,20,30,36,40,50,60,68,70,76,79,80,83,87,89,91,99), labels=c("keineBeobachtung","Bewölkung", "DunstStaub","Nebel", "Wetterleuchte","Niederschlag","Gewitter","BoeeTornado","EndeRegSchnSchau","Sandsturm","Schnee","Nebel2","Sprühregen","Regen","Schneeregen","Schnee2","Schnee_mooNebel","Eiskorn","Regenschauer","Schneeregenschauer","Graupelschauer","Hagelschauer","Gewitter2"), right=FALSE)
 Wettercode
 
+<<<<<<< HEAD
 umsatzdaten$Wettercode[is.na(umsatzdaten$Wettercode)]= "FALSE"
 
 umsatzdaten$Wettercode %>%
@@ -256,6 +260,11 @@ umsatzdaten$Wettercode %>% replace_na("unknown")
 View(umsatzdaten) 
 umsatzdaten$Wetterzustand <- !is.na(umsatzdaten$Wetterzustand)
 
+=======
+View(umsatzdaten) 
+umsatzdaten$Wetterzustand <- !is.na(umsatzdaten$Wetterzustand)
+
+>>>>>>> baf365bd4af70a91a8c5d67bd1c199029bd948eb
 
 #keineBeobachtung 0
 #Bewölkung (1-3)
@@ -281,9 +290,15 @@ umsatzdaten$Wetterzustand <- !is.na(umsatzdaten$Wetterzustand)
 #Hagelschauer 89-90
 #Gewitter2(91-99)
 
+<<<<<<< HEAD
 
 View(umsatzdaten)
 
+=======
+
+View(umsatzdaten)
+
+>>>>>>> baf365bd4af70a91a8c5d67bd1c199029bd948eb
 
 ```
 
@@ -358,9 +373,13 @@ mod7 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ T
 mod8 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+Windgeschwindigkeit+dayoff_after+dayoff_b4, umsatzdaten)
 mod9 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+Windgeschwindigkeit+dayoff_after+dayoff_b4+jahreszeit, umsatzdaten)
 mod10 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+Windgeschwindigkeit+dayoff_after+dayoff_b4+jahreszeit+Bewoelkung, umsatzdaten)
+<<<<<<< HEAD
 mod11 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+Windgeschwindigkeit+dayoff_after+dayoff_b4+jahreszeit+Bewoelkung+holiday, umsatzdaten)
 mod12 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+Windgeschwindigkeit+dayoff_after+dayoff_b4+jahreszeit+Bewoelkung+holiday+dayoff_after_holiday, umsatzdaten)
 mod13 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+Windgeschwindigkeit+dayoff_after+dayoff_b4+jahreszeit+Bewoelkung+holiday+dayoff_after_holiday+dayoff_b4_holiday, umsatzdaten)
+=======
+
+>>>>>>> baf365bd4af70a91a8c5d67bd1c199029bd948eb
 
 mod6 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+holiday, umsatzdaten) 
 #mod7 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+holiday+as.factor(jahreszeit), umsatzdaten) #Fehler
@@ -384,9 +403,12 @@ summary(mod7)
 summary(mod8)
 summary(mod9)
 summary(mod10)
+<<<<<<< HEAD
 summary(mod11)
 summary(mod12)
 summary(mod13)
+=======
+>>>>>>> baf365bd4af70a91a8c5d67bd1c199029bd948eb
 ```
 
 ```{r}
