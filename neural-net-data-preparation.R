@@ -66,7 +66,7 @@ get.norm_values <- function (.data, select_columns = NULL) {
 # Einlesen der Daten
 #house_pricing <- read_csv("https://raw.githubusercontent.com/opencampus-sh/sose20-datascience/master/house_pricing_test.csv")
 
-
+View(umsatzdaten)
 ###################################################
 ### Datenaufbereitung ####
 
@@ -76,16 +76,16 @@ umsatzdaten_dummy = dummy_cols(umsatzdaten, dummy_list)
 
 # Definition von Variablenlisten für die Dummies, um das Arbeiten mit diesen zu erleichtern
 Warengruppe_dummies = c('Warengruppe_1', 'Warengruppe_2','Warengruppe_3', 'Warengruppe_4','Warengruppe_5','Warengruppe_6')
-wochentag_dummies= .......
+wochentag_dummies= c('Monday', 'Tuesday','Wednesday', 'Thursday', 'Friday','Saturday', 'Sunday') 
 
 #condition_dummies = c('condition_1', 'condition_2', 'condition_3', 'condition_4', 'condition_5')
 #view_dummies = c('view_0', 'view_1', 'view_2', 'view_3','view_4')
 
 
 # Standardisierung aller Feature Variablen und der Label Variable
-norm_list <- c("price", "sqft_lot", "bathrooms", "grade", "waterfront", view_dummies, condition_dummies) # Liste aller Variablen
-norm_values_list <- get.norm_values(house_pricing_dummy, norm_list)    # Berechnung der Mittelwerte und Std.-Abw. der Variablen
-house_pricing_norm <- norm_cols(house_pricing_dummy, norm_values_list) # Standardisierung der Variablen
+norm_list <- c("Umsatz", "Warengruppe", "bathrooms", "grade", "waterfront", Warengruppe_dummies, wochentag_dummies) # Liste aller Variablen
+norm_values_list <- get.norm_values(umsatzdaten_dummy, norm_list)    # Berechnung der Mittelwerte und Std.-Abw. der Variablen
+umsatzdaten_norm <- norm_cols(umsatzdaten_dummy, norm_values_list) # Standardisierung der Variablen
 
 
 
@@ -93,9 +93,9 @@ house_pricing_norm <- norm_cols(house_pricing_dummy, norm_values_list) # Standar
 ### Definition der Feature-Variablen und der Label-Variable ####
 
 # Definition der Features (der unabhängigen Variablen auf deren Basis die Vorhersagen erzeugt werden sollen)
-features = c('sqft_lot', 'waterfront', 'grade', 'bathrooms', view_dummies, condition_dummies)
+features = c('Warengruppe', 'wochentag', Warengruppe_dummies, wochentag_dummies)
 # Definition der Label-Variable (der abhaengigen Variable, die vorhergesagt werden soll) sowie
-label = 'price'
+label = 'Umsatz'
 
 
 ###################################################
