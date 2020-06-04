@@ -86,9 +86,6 @@ schulferien <- tibble(Datum = as.Date(c(
 )))
 
 schulferien$schulferien <- TRUE
-# umsatzdaten <- left_join(umsatzdaten, schulferien)
-# umsatzdaten$schulferien <- !is.na(umsatzdaten$schulferien)
-
 
 #Export als CSV:
 write.csv(schulferien,"Schulferien", row.names = F)
