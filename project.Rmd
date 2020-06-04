@@ -480,15 +480,6 @@ umsatzdaten$Wettercode <- cut(umsatzdaten$Wettercode, breaks = c(0,1,4,11,13,14,
 Wettercode
 
 
-umsatzdaten$Wettercode[is.na(umsatzdaten$Wettercode)]= "FALSE"
-
-umsatzdaten$Wettercode %>%
-  replace_na(list(Wettercode = FALSE))
-
-umsatzdaten$Wettercode %>% replace_na("unknown")
-
-View(umsatzdaten) 
-umsatzdaten$Wettercode <- !is.na(umsatzdaten$Wettercode)
 
 =======
 View(umsatzdaten) 
