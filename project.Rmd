@@ -231,6 +231,8 @@ library(dplyr)
 wetter <- read_csv("wetter.csv")
 View(wetter)
 
+wetter[is.na(wetter)] <-0
+
 umsatzdaten<- left_join(umsatzdaten, wetter)
 View(umsatzdaten)
 
@@ -357,6 +359,7 @@ umsatzdaten_2019 <-
 View(umsatzdaten_2019)
 
 #Difference für Abweichung
+
 
 
 
