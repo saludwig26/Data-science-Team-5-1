@@ -50,6 +50,8 @@ holidays <- read.csv("Holiday_List")
 holidays$Datum <- as.Date(holidays$Datum)
 umsatzdaten <- left_join(umsatzdaten, holidays)
 umsatzdaten$holiday <- !is.na(umsatzdaten$holiday)
+umsatzdaten$sylvester <- !is.na(umsatzdaten$sylvester)
+rm(holidays)
 ```
 
 Langes Wochendende (Liegt vor dem Saturday oder nach dem Sunday ein Feiertag? bzw. ist Montag oder Freitag ein Feiertag?)
@@ -65,15 +67,16 @@ schulferien <- read.csv("Schulferien")
 schulferien$Datum <- as.Date(schulferien$Datum)
 umsatzdaten <- left_join(umsatzdaten, schulferien)
 umsatzdaten$schulferien <- !is.na(umsatzdaten$schulferien)
+rm(schulferien)
 ```
 
 Kieler Woche:
 ```{r}
 kiwo <- read_csv("kiwo.csv")
-
 umsatzdaten$KielerWoche <- NULL
 umsatzdaten <- left_join(umsatzdaten, kiwo)
 umsatzdaten$KielerWoche <- !is.na(umsatzdaten$KielerWoche)
+rm(kiwo)
 ```
 
 
@@ -417,15 +420,12 @@ train_dataset <- sample_frac(train, .10)
 ```
 
 Importing Training and Test Data
-
-
 ```{r}
 baecker_umsatzdaten_train <- read_csv("train.csv")
 baecker_umsatzdaten_test <- read_csv("test.csv")
 ```
 
 Estimating (Training) Models
-
 (Alle Warengruppen getrennt anschauen)
 ```{r}
 mod0 <- lm(Umsatz ~ , umsatzdaten)
@@ -639,14 +639,6 @@ get.norm_values <- function (.data, select_columns = NULL) {
   names(result) <- c("name", "mean", "sd")
   return (result)
 }
-
-```
-
-#TO DO
-### Datenimport ###
-```{r}
-# Einlesen der Daten
-#house_pricing <- read_csv("https://raw.githubusercontent.com/opencampus-sh/sose20-datascience/master/house_pricing_test.csv")
 
 ```
 

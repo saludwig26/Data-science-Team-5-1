@@ -28,8 +28,15 @@ Holiday_List <- tibble(Datum = c(
 Holiday_List$Datum <- sort(Holiday_List$Datum)
 Holiday_List$holiday <- TRUE
 
+#Einfügen der Variable Sylvester
+Sylvester <- tibble(Datum = as.Date(c("2013-12-31", "2014-12-31", "2015-12-31,", "2016-12-31",
+                                      "2017-12-31", "2018-12-31", "2019-12-31,", "2020-12-31",
+                                      "2021-12-31", "2022-12-31")), sylvester = TRUE)
+Holiday_List <- left_join(Holiday_List, Sylvester)
+
 #Export als CSV:
 write.csv(Holiday_List,"Holiday_List", row.names = F)
+
 
 
 
