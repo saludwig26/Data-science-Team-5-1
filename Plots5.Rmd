@@ -12,7 +12,7 @@ output: html_document
 3 croissant
 4 konditorei
 5 kuchen
-6 saisonbrot
+6 saisonbrot...
 
 Einbinden benoetigter Bibliotheken
 ```{r}
