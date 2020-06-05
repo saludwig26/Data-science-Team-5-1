@@ -1,0 +1,230 @@
+---
+title: "Untitled"
+author: "Alejandro"
+date: "6/4/2020"
+output: html_document
+---
+```{r}
+#grouping
+mpg %>%
+group_by(cyl) %>%
+summarise(n(), t.test(cty,hwy)$p.value)
+
+ZUSAMMENFÜHREN VON DATENTABELLEN
+
+left_join(x, y) #return all rows from x, and all columns from x and y. Rows in x with no match in y will have NA values in the new columns. If there are multiple matches between x and y, all combinations of the matches are returned. 
+#ex.. daten <- left_join(umsatzdaten, kiwo)
+
+inner_join(x, y) #return all rows from x where there are matching values in y, and all columns from x and y. If there are multiple matches between x and y, all combination of the matches are returned.
+
+right_join()
+
+full_join()
+
+DPLYR
+
+mpg %>%
+select (class, hwy, cty) %>% filter (class=="suv") %>% mutate (mix = .5*hwy + .5*cty)
+
+
+```
+
+```{r}
+my_Warengruppe <- umsatzdaten %>%
+  group_by(Warengruppe, wochentag) %>%
+  summarise(
+    n=n(),
+    mean_Umsatz=mean(Umsatz),
+    sd_Umsatz=sd(Umsatz)
+    )%>%
+     mutate( se=sd_Umsatz/sqrt(n))  %>%
+     mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+  
+
+# summarise(n(), t.test(cty,hwy)$p.value)
+head(my_Warengruppe, 200)
+
+# Confidence Interval
+ggplot(my_Warengruppe) + facet_wrap(~Warengruppe) +
+  geom_bar( aes(x=wochentag, y=mean_Umsatz), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=wochentag, ymin=mean_Umsatz-ic, ymax=mean_Umsatz+ic), width=0.3, colour="orange", alpha=0.3, size=1.5) +
+  ggtitle("Confidence Interval") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+
+```{r}
+my_Warengruppe <- umsatzdaten %>%
+  group_by(Warengruppe, Umsatz, Datum) %>%
+  summarise(
+    n=n(),
+    mean_Umsatz=mean(Umsatz),
+    sd_Umsatz=sd(Umsatz)
+    )%>%
+     mutate( se=sd_Umsatz/sqrt(n))  %>%
+     mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+  
+
+# summarise(n(), t.test(cty,hwy)$p.value)
+head(my_Warengruppe, 200)
+
+# Confidence Interval
+ggplot(my_Warengruppe) + facet_wrap(~Warengruppe) +
+  geom_bar( aes(x=year(Datum), y=mean_Umsatz), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=year(Datum), ymin=mean_Umsatz-ic, ymax=mean_Umsatz+ic), width=0.3, colour="orange", alpha=0.3, size=10) +
+  ggtitle("Confidence Interval") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+```{r}
+library(scales)
+ggplot(umsatzdaten) +
+  facet_wrap(~Warengruppe) +
+  geom_line(aes(x = Datum, y = Umsatz, colour = wochentag), size=0.1)  + scale_x_date(breaks = date_breaks("months"),
+  labels = date_format("%b")) + theme(axis.text.x = element_text(angle = 90, size= 7, hjust = 1))
+```
+
+```{r}
+library(scales)
+kuchen_plot <- umsatzdaten %>%
+  select (Warengruppe, Datum, Umsatz, wochentag, holiday) %>% filter (Warengruppe=="5")
+ggplot(kuchen_plot) +
+  geom_line(aes(x = Datum, y = Umsatz, colour = holiday), size=0.1)  + scale_x_date(breaks = date_breaks("months"),
+  labels = date_format("%b")) + theme(axis.text.x = element_text(angle = 90, size= 7, hjust = 1)) 
+```
+
+
+```{r}
+my_Warengruppe <- umsatzdaten %>%
+  group_by(Warengruppe, jahreszeit) %>%
+  summarise(
+    n=n(),
+    mean_Umsatz=mean(Umsatz),
+    sd_Umsatz=sd(Umsatz)
+    )%>%
+     mutate( se=sd_Umsatz/sqrt(n))  %>%
+     mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+  
+
+# summarise(n(), t.test(cty,hwy)$p.value)
+head(my_Warengruppe, 200)
+
+# Confidence Interval
+ggplot(my_Warengruppe) + facet_wrap(~Warengruppe) +
+  geom_bar( aes(x=jahreszeit, y=mean_Umsatz), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=jahreszeit, ymin=mean_Umsatz-ic, ymax=mean_Umsatz+ic), width=0.3, colour="orange", alpha=0.3, size=1.5) +
+  ggtitle("Confidence Interval") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+```{r}
+my_Warengruppe <- umsatzdaten %>%
+  group_by(Warengruppe, holiday) %>%
+  summarise(
+    n=n(),
+    mean_Umsatz=mean(Umsatz),
+    sd_Umsatz=sd(Umsatz)
+    )%>%
+     mutate( se=sd_Umsatz/sqrt(n))  %>%
+     mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+  
+
+# summarise(n(), t.test(cty,hwy)$p.value)
+head(my_Warengruppe, 200)
+
+# Confidence Interval
+ggplot(my_Warengruppe) + facet_wrap(~Warengruppe) +
+  geom_bar( aes(x=holiday, y=mean_Umsatz), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=holiday, ymin=mean_Umsatz-ic, ymax=mean_Umsatz+ic), width=0.3, colour="orange", alpha=0.3, size=1.5) +
+  ggtitle("Confidence Interval") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+
+```{r}
+my_Warengruppe <- umsatzdaten %>%
+  group_by(Warengruppe, VerlaengertesWE_Mo) %>%
+  summarise(
+    n=n(),
+    mean_Umsatz=mean(Umsatz),
+    sd_Umsatz=sd(Umsatz)
+    )%>%
+     mutate( se=sd_Umsatz/sqrt(n))  %>%
+     mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+  
+
+# summarise(n(), t.test(cty,hwy)$p.value)
+head(my_Warengruppe, 200)
+
+# Confidence Interval
+ggplot(my_Warengruppe) + facet_wrap(~Warengruppe) +
+  geom_bar( aes(x=VerlaengertesWE_Mo, y=mean_Umsatz), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=VerlaengertesWE_Mo, ymin=mean_Umsatz-ic, ymax=mean_Umsatz+ic), width=0.3, colour="orange", alpha=0.3, size=1.5) +
+  ggtitle("Confidence Interval") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+```{r}
+my_Warengruppe <- umsatzdaten %>%
+  group_by(Warengruppe, VerlaengertesWE_Fr) %>%
+  summarise(
+    n=n(),
+    mean_Umsatz=mean(Umsatz),
+    sd_Umsatz=sd(Umsatz)
+    )%>%
+     mutate( se=sd_Umsatz/sqrt(n))  %>%
+     mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+  
+
+# summarise(n(), t.test(cty,hwy)$p.value)
+head(my_Warengruppe, 200)
+
+# Confidence Interval
+ggplot(my_Warengruppe) + facet_wrap(~Warengruppe) +
+  geom_bar( aes(x=VerlaengertesWE_Fr, y=mean_Umsatz), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=VerlaengertesWE_Fr, ymin=mean_Umsatz-ic, ymax=mean_Umsatz+ic), width=0.3, colour="orange", alpha=0.3, size=1.5) +
+  ggtitle("Confidence Interval") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+```{r}
+my_Warengruppe <- umsatzdaten %>%
+  group_by(Warengruppe, schulferien) %>%
+  summarise(
+    n=n(),
+    mean_Umsatz=mean(Umsatz),
+    sd_Umsatz=sd(Umsatz)
+    )%>%
+     mutate( se=sd_Umsatz/sqrt(n))  %>%
+     mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+  
+
+# summarise(n(), t.test(cty,hwy)$p.value)
+head(my_Warengruppe, 200)
+
+# Confidence Interval
+ggplot(my_Warengruppe) + facet_wrap(~Warengruppe) +
+  geom_bar( aes(x=schulferien, y=mean_Umsatz), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=schulferien, ymin=mean_Umsatz-ic, ymax=mean_Umsatz+ic), width=0.3, colour="orange", alpha=0.3, size=1.5) +
+  ggtitle("Confidence Interval") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+
+
+```{r}
+library(dplyr)
+
+Brot <- umsatzdaten %>%
+select (Warengruppe,  Umsatz) %>% filter (Warengruppe=="1") 
+
+summary(Brot)
+View(Brot)
+```
+
+
+
+
+```{r}
+library(ggfortify)
+df <- umsatzdaten[2:3]
+pca_res <- prcomp(df, scale. = TRUE)
+
+autoplot(pca_res)
+autoplot(pca_res, data = umsatzdaten, colour = 'Warengruppe')
+autoplot(pca_res, data = umsatzdaten, colour = 'Warengruppe', label = TRUE, label.size = 2)
+autoplot(pca_res, data = umsatzdaten, colour = 'Warengruppe', shape = FALSE, label.size = 2)
+```
+
