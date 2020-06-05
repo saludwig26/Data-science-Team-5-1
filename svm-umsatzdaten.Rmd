@@ -14,8 +14,8 @@ library(Metrics)
 library(dplyr)
 library(ggplot2)
 
-# Importing Data
-house_pricing <- read_csv("https://raw.githubusercontent.com/opencampus-sh/sose20-datascience/master/house_pricing_test.csv")
+
+
 ```
 
 
@@ -53,7 +53,6 @@ model_svm <- svm(Umsatz ~ as.factor(wochentag), train_dataset)
 Entferne Spalten die NA enthalten
 ```{r}
 train_dataset$Wettercode <- NULL
-train_dataset$wetterzustand <- NULL
 train_dataset$Temperatur <- NULL
 train_dataset$Bewoelkung <- NULL
 train_dataset$Windgeschwindigkeit <- NULL
@@ -65,6 +64,14 @@ Support Vector Machine für verkleinerten Datensatz
 # the resulting object includes the optimal model in the element named 'best.model'
 svm_tune <- tune(svm, Umsatz ~ as.factor(Warengruppe) + as.factor(wochentag) + jahreszeit + KielerWoche, data=train_dataset,
                  ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
+```
+
+Entferne Spalten die NA enthalten
+```{r}
+train_dataset_org$Wettercode <- NULL
+train_dataset_org$Temperatur <- NULL
+train_dataset_org$Bewoelkung <- NULL
+train_dataset_org$Windgeschwindigkeit <- NULL
 ```
 
 Support Vector Machine für kompletten Datensatz
@@ -93,5 +100,9 @@ mape(train_dataset$Umsatz, pred_train)
 pred_test <- predict(svm_tune$best.model, test_dataset)
 # Calculating the prediction quality for the training data using the MAPE
 mape(test_dataset$Umsatz, pred_test)
+```
+04.06.2019 Vorhersage 
+```{r}
+
 ```
 

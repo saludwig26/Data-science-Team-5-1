@@ -6,13 +6,13 @@
 #install.packages("fastDummies")
 
 # Umgebungsvariablen löschen
-remove(list = ls())
+#remove(list = ls())
 
 # Einbinden benötigter Funktionsbibliotheken
 library(readr)
 library(fastDummies)
 
-
+View(umsatzdaten)
 
 ###################################################
 ### Funktionsdefinitionen ####
@@ -83,7 +83,7 @@ wochentag_dummies= c('Monday', 'Tuesday','Wednesday', 'Thursday', 'Friday','Satu
 
 
 # Standardisierung aller Feature Variablen und der Label Variable
-norm_list <- c("Umsatz", "Warengruppe", "bathrooms", "grade", "waterfront", Warengruppe_dummies, wochentag_dummies) # Liste aller Variablen
+norm_list <- c("Umsatz", "Warengruppe", Warengruppe_dummies, wochentag_dummies) # Liste aller Variablen
 norm_values_list <- get.norm_values(umsatzdaten_dummy, norm_list)    # Berechnung der Mittelwerte und Std.-Abw. der Variablen
 umsatzdaten_norm <- norm_cols(umsatzdaten_dummy, norm_values_list) # Standardisierung der Variablen
 
