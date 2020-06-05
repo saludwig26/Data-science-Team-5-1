@@ -1,6 +1,6 @@
 ---
 title: "Project"
-author: "Manuel Alejandro"
+author: "Data Science Team 5"
 date: "5/14/2020"
 output: html_document
 ---
@@ -89,6 +89,7 @@ wetter <- read_csv("wetter.csv")
 View(wetter)
 
 wetter[is.na(wetter)] <-0
+str(wetter)
 
 umsatzdaten<- left_join(umsatzdaten, wetter)
 View(umsatzdaten)
@@ -106,244 +107,12 @@ View(umsatzdaten)
 ```
 
 
-```{r}
-#Abweichung der Temperatur von der durchschnittstemperatur in dem jeweiligen Monat
-# First we filter the year 2013
-umsatzdaten_y13 <- umsatzdaten[which(year(umsatzdaten$Datum) == 2013),]
-# Now we add a column with the month
-# Check the "Read date and time variables" and the "mutate" tutorials
-umsatzdaten_y13 <- mutate(umsatzdaten_y13, Month = factor(format(Datum, "%m")))
-#str(umsatzdaten_y13)
-View(umsatzdaten_y13)
-
-umsatzdaten_2013 <-    
-    group_by(umsatzdaten_y13, Month) %>% 
-    summarise(Month_avg = mean (Temperatur))
-
-View(umsatzdaten_2013)
-
-# First we filter the year 2013
-umsatzdaten_y14 <- umsatzdaten[which(year(umsatzdaten$Datum) == 2014),]
-
-# Now we add a column with the month
-# Check the "Read date and time variables" and the "mutate" tutorials
-umsatzdaten_y14 <- mutate(umsatzdaten_y14, Month = factor(format(Datum, "%m")))
-#str(umsatzdaten_y14)
-View(umsatzdaten_y14)
-
-umsatzdaten_2014 <-    
-    group_by(umsatzdaten_y14, Month) %>% 
-    summarise(Month_avg = mean (Temperatur))
-
-View(umsatzdaten_2014)
-
-
-# First we filter the year 2013
-umsatzdaten_y15 <- umsatzdaten[which(year(umsatzdaten$Datum) == 2015),]
-
-# Now we add a column with the month
-# Check the "Read date and time variables" and the "mutate" tutorials
-umsatzdaten_y15 <- mutate(umsatzdaten_y15, Month = factor(format(Datum, "%m")))
-#str(umsatzdaten_y15)
-View(umsatzdaten_y15)
-
-umsatzdaten_2015 <-    
-    group_by(umsatzdaten_y15, Month) %>% 
-    summarise(Month_avg = mean (Temperatur))
-
-View(umsatzdaten_2015)
-
-
-
-# First we filter the year 2016
-umsatzdaten_y16 <- umsatzdaten[which(year(umsatzdaten$Datum) == 2016),]
-
-# Now we add a column with the month
-# Check the "Read date and time variables" and the "mutate" tutorials
-umsatzdaten_y16 <- mutate(umsatzdaten_y16, Month = factor(format(Datum, "%m")))
-#str(umsatzdaten_y16)
-View(umsatzdaten_y16)
-
-umsatzdaten_2016 <-    
-    group_by(umsatzdaten_y16, Month) %>% 
-    summarise(Month_avg = mean (Temperatur))
-
-View(umsatzdaten_2016)
-
-
-
-
-# First we filter the year 2017
-umsatzdaten_y17 <- umsatzdaten[which(year(umsatzdaten$Datum) == 2017),]
-
-# Now we add a column with the month
-# Check the "Read date and time variables" and the "mutate" tutorials
-umsatzdaten_y17 <- mutate(umsatzdaten_y17, Month = factor(format(Datum, "%m")))
-#str(umsatzdaten_y17)
-View(umsatzdaten_y17)
-
-umsatzdaten_2017 <-    
-    group_by(umsatzdaten_y17, Month) %>% 
-    summarise(Month_avg = mean (Temperatur))
-
-View(umsatzdaten_2017)
-
-
-umsatzdaten_y18 <- umsatzdaten[which(year(umsatzdaten$Datum) == 2018),]
-
-# Now we add a column with the month
-# Check the "Read date and time variables" and the "mutate" tutorials
-umsatzdaten_y18 <- mutate(umsatzdaten_y18, Month = factor(format(Datum, "%m")))
-#str(umsatzdaten_y18)
-View(umsatzdaten_y18)
-
-umsatzdaten_2018 <-    
-    group_by(umsatzdaten_y18, Month) %>% 
-    summarise(Month_avg = mean (Temperatur))
-
-View(umsatzdaten_2018)
-
-umsatzdaten_y19 <- umsatzdaten[which(year(umsatzdaten$Datum) == 2019),]
-
-# Now we add a column with the month
-# Check the "Read date and time variables" and the "mutate" tutorials
-umsatzdaten_y19 <- mutate(umsatzdaten_y19, Month = factor(format(Datum, "%m")))
-#str(umsatzdaten_y19)
-View(umsatzdaten_y19)
-
-umsatzdaten_2019 <-    
-    group_by(umsatzdaten_y19, Month) %>% 
-    summarise(Month_avg = mean (Temperatur))
-
-View(umsatzdaten_2019)
-
-#Difference für Abweichung
-
-
-
-
-
-
-umsatzdaten_y13$Value <- 2
-
-# Now we group by the month column
-umsatzdaten <- group_by(umsatzdaten_y13, Month)
-summarize(umsatzdaten, Temperatur1 = mean(Temperatur))
-
-
-umsatzdaten_y13 <- mean(umsatzdaten_y13$Temperatur if umsatzdaten_y13$Month == 7)
-library(dplyr)
-
-umsatzdaten_y13 %>% 
-group_by(Month) %>% 
-  summarize(m = mean(umsatzdaten_y13$Temperatur)
-  mutate(mean(as.numeric(umsatzdaten_y13$Temperatur)))
-  ###
-  
- umsatzdaten_y13  <- umsatzdaten_y13  %>%  
-    group_by(Month) %>% 
-    mutate(MonthAve= mean (Temperatur)) 
-  
- View(umsatzdaten_y13)
- 
-
- 
-  
-  df_final_plot2_sz1 <-    
-    group_by(df_final_sz1,cluster_sz1) %>% 
-    summarise(TPAD_avg = mean (TPAD))
-  
-  View(df_final_plot2_sz1)
-  
-  
-  df_final_plot3_sz1 <-    
-    group_by(df_final_sz1,cluster_sz1) %>% 
-    summarise(TCAL_avg = mean (TCAL))
-  
-  View(df_final_plot3_sz1)
-  
-  df_final_plot4_sz1 <-    
-    group_by(df_final_sz1,cluster_sz1) %>% 
-    summarise(Sum_Doc_Rel_a
-  
-  
-  
-  
-  ###
-View(umsatzdaten_y13)
-summarize(m = mean(speed))
-
-
-library(dplyr)
-
-AbweiDurch<- umsatzdaten %>% 
-    group_by(Month = format(as.Date(Datum), '%b-%Y')) %>%
-    mean(umsatzdaten$Temperatur), )
-View(umsatzdaten) 
-
-umsatzdaten$Temperatur1<-mean(as.numeric(umsatzdaten$Temperatur)
-
-AbweiDurch<- umsatzdaten %>% 
-    group_by(Month = format(as.Date(Datum), '%b-%Y')) %>%
-    mean(umsatzdaten$Temperatur), )
-
-library(data.table)
-setDT(umsatzdaten)[,lapply(.SD, function(x) if(length(na.omit(x)) >=15)
-       mean(x, na.rm=TRUE) else NA_real_) ,
-             by = .(Month= format(as.IDate(Datum), '%b-%Y'))]
-
-
-AbweiDurch<- umsatzdaten %>% 
-    group_by(Month = format(as.Date(Datum), '%b-%Y')) %>%
-    mean(Temperatur, trim = 0, na.rm=FALSE)
-
-library(dplyr)
-library(lubridate)
-umsatzdaten  %>% group_by(year(=floor_date(date(), "year")) %>%
-   summarize(Temperatur1=sum(Temperatur))
-str(umsatzdaten)
-
-library(dplyr)
-
-AbweiDurch<- umsatzdaten %>% 
-    group_by(Month = format(as.Date(Datum), '%b-%Y')) %>%
-    mean(umsatzdaten$Temperatur), )
-View(umsatzdaten) 
-
-umsatzdaten$Temperatur1<-mean(as.numeric(umsatzdaten$Temperatur)
-
-AbweiDurch<- umsatzdaten %>% 
-    group_by(Month = format(as.Date(Datum), '%b-%Y')) %>%
-    mean(umsatzdaten$Temperatur), )
-
-library(data.table)
-setDT(umsatzdaten)[,lapply(.SD, function(x) if(length(na.omit(x)) >=15)
-       mean(x, na.rm=TRUE) else NA_real_) ,
-             by = .(Month= format(as.IDate(Datum), '%b-%Y'))]
-
-
-AbweiDurch<- umsatzdaten %>% 
-    group_by(Month = format(as.Date(Datum), '%b-%Y')) %>%
-    mean(Temperatur, trim = 0, na.rm=FALSE)
-
-library(dplyr)
-library(lubridate)
-umsatzdaten  %>% group_by(year(=floor_date(date(), "year")) %>%
-   summarize(Temperatur1=sum(Temperatur))
-str(umsatzdaten)
-=======
-```
-
 
 ```{r}
 #Wettercode - Umformen der numerischen Variable Wettercode in Faktorvariabel 
 umsatzdaten$Wettercode <- as.numeric(as.character(umsatzdaten$Wettercode))
-umsatzdaten$Wettercode <- cut(umsatzdaten$Wettercode, breaks = c(0,1,4,11,13,14,17,18,20,30,36,40,50,60,68,70,76,79,80,83,87,89,91,99), labels=c("keineBeobachtung","Bewölkung", "DunstStaub","Nebel", "Wetterleuchte","Niederschlag","Gewitter","BoeeTornado","EndeRegSchnSchau","Sandsturm","Schnee","Nebel2","Sprühregen","Regen","Schneeregen","Schnee2","Schnee_mooNebel","Eiskorn","Regenschauer","Schneeregenschauer","Graupelschauer","Hagelschauer","Gewitter2"), right=FALSE)
+umsatzdaten$Wettercode <- cut(umsatzdaten$Wettercode, breaks = c(0,14,99), labels=c("Trocken","RegenGewitter"), right=FALSE)
 
-
-
-
-=======
 View(umsatzdaten) 
 
 
@@ -769,4 +538,207 @@ Vorher/nachher mehr umsatz
 # View(umsatzdaten)
 ```
 
+```{r}
+#Ignore!
+#Abweichung der Temperatur von der durchschnittstemperatur in dem jeweiligen Monat
+# First we filter the year 2013
+umsatzdaten_y13 <- umsatzdaten[which(year(umsatzdaten$Datum) == 2013),]
+# Now we add a column with the month
+# Check the "Read date and time variables" and the "mutate" tutorials
+umsatzdaten_y13 <- mutate(umsatzdaten_y13, Month = factor(format(Datum, "%m")))
+#str(umsatzdaten_y13)
+View(umsatzdaten_y13)
+
+umsatzdaten_2013 <-    
+    group_by(umsatzdaten_y13, Month) %>% 
+    summarise(Month_avg = mean (Temperatur))
+
+View(umsatzdaten_2013)
+
+# First we filter the year 2013
+umsatzdaten_y14 <- umsatzdaten[which(year(umsatzdaten$Datum) == 2014),]
+
+# Now we add a column with the month
+# Check the "Read date and time variables" and the "mutate" tutorials
+umsatzdaten_y14 <- mutate(umsatzdaten_y14, Month = factor(format(Datum, "%m")))
+#str(umsatzdaten_y14)
+View(umsatzdaten_y14)
+
+umsatzdaten_2014 <-    
+    group_by(umsatzdaten_y14, Month) %>% 
+    summarise(Month_avg = mean (Temperatur))
+
+View(umsatzdaten_2014)
+
+
+# First we filter the year 2013
+umsatzdaten_y15 <- umsatzdaten[which(year(umsatzdaten$Datum) == 2015),]
+
+# Now we add a column with the month
+# Check the "Read date and time variables" and the "mutate" tutorials
+umsatzdaten_y15 <- mutate(umsatzdaten_y15, Month = factor(format(Datum, "%m")))
+#str(umsatzdaten_y15)
+View(umsatzdaten_y15)
+
+umsatzdaten_2015 <-    
+    group_by(umsatzdaten_y15, Month) %>% 
+    summarise(Month_avg = mean (Temperatur))
+
+View(umsatzdaten_2015)
+
+
+
+# First we filter the year 2016
+umsatzdaten_y16 <- umsatzdaten[which(year(umsatzdaten$Datum) == 2016),]
+
+# Now we add a column with the month
+# Check the "Read date and time variables" and the "mutate" tutorials
+umsatzdaten_y16 <- mutate(umsatzdaten_y16, Month = factor(format(Datum, "%m")))
+#str(umsatzdaten_y16)
+View(umsatzdaten_y16)
+
+umsatzdaten_2016 <-    
+    group_by(umsatzdaten_y16, Month) %>% 
+    summarise(Month_avg = mean (Temperatur))
+
+View(umsatzdaten_2016)
+
+
+
+
+# First we filter the year 2017
+umsatzdaten_y17 <- umsatzdaten[which(year(umsatzdaten$Datum) == 2017),]
+
+# Now we add a column with the month
+# Check the "Read date and time variables" and the "mutate" tutorials
+umsatzdaten_y17 <- mutate(umsatzdaten_y17, Month = factor(format(Datum, "%m")))
+#str(umsatzdaten_y17)
+View(umsatzdaten_y17)
+
+umsatzdaten_2017 <-    
+    group_by(umsatzdaten_y17, Month) %>% 
+    summarise(Month_avg = mean (Temperatur))
+
+View(umsatzdaten_2017)
+
+
+umsatzdaten_y18 <- umsatzdaten[which(year(umsatzdaten$Datum) == 2018),]
+
+# Now we add a column with the month
+# Check the "Read date and time variables" and the "mutate" tutorials
+umsatzdaten_y18 <- mutate(umsatzdaten_y18, Month = factor(format(Datum, "%m")))
+#str(umsatzdaten_y18)
+View(umsatzdaten_y18)
+
+umsatzdaten_2018 <-    
+    group_by(umsatzdaten_y18, Month) %>% 
+    summarise(Month_avg = mean (Temperatur))
+
+View(umsatzdaten_2018)
+
+umsatzdaten_y19 <- umsatzdaten[which(year(umsatzdaten$Datum) == 2019),]
+
+# Now we add a column with the month
+# Check the "Read date and time variables" and the "mutate" tutorials
+umsatzdaten_y19 <- mutate(umsatzdaten_y19, Month = factor(format(Datum, "%m")))
+#str(umsatzdaten_y19)
+View(umsatzdaten_y19)
+
+umsatzdaten_2019 <-    
+    group_by(umsatzdaten_y19, Month) %>% 
+    summarise(Month_avg = mean (Temperatur))
+
+View(umsatzdaten_2019)
+
+#Difference für Abweichung
+
+
+
+
+
+
+umsatzdaten_y13$Value <- 2
+
+# Now we group by the month column
+umsatzdaten <- group_by(umsatzdaten_y13, Month)
+summarize(umsatzdaten, Temperatur1 = mean(Temperatur))
+
+
+umsatzdaten_y13 <- mean(umsatzdaten_y13$Temperatur if umsatzdaten_y13$Month == 7)
+library(dplyr)
+
+umsatzdaten_y13 %>% 
+group_by(Month) %>% 
+  summarize(m = mean(umsatzdaten_y13$Temperatur)
+  mutate(mean(as.numeric(umsatzdaten_y13$Temperatur)))
+  ###
+  
+ umsatzdaten_y13  <- umsatzdaten_y13  %>%  
+    group_by(Month) %>% 
+    mutate(MonthAve= mean (Temperatur)) 
+  
+ 
+View(umsatzdaten_y13)
+summarize(m = mean(speed))
+
+
+library(dplyr)
+
+AbweiDurch<- umsatzdaten %>% 
+    group_by(Month = format(as.Date(Datum), '%b-%Y')) %>%
+    mean(umsatzdaten$Temperatur), )
+View(umsatzdaten) 
+
+umsatzdaten$Temperatur1<-mean(as.numeric(umsatzdaten$Temperatur)
+
+AbweiDurch<- umsatzdaten %>% 
+    group_by(Month = format(as.Date(Datum), '%b-%Y')) %>%
+    mean(umsatzdaten$Temperatur), )
+
+library(data.table)
+setDT(umsatzdaten)[,lapply(.SD, function(x) if(length(na.omit(x)) >=15)
+       mean(x, na.rm=TRUE) else NA_real_) ,
+             by = .(Month= format(as.IDate(Datum), '%b-%Y'))]
+
+
+AbweiDurch<- umsatzdaten %>% 
+    group_by(Month = format(as.Date(Datum), '%b-%Y')) %>%
+    mean(Temperatur, trim = 0, na.rm=FALSE)
+
+library(dplyr)
+library(lubridate)
+umsatzdaten  %>% group_by(year(=floor_date(date(), "year")) %>%
+   summarize(Temperatur1=sum(Temperatur))
+str(umsatzdaten)
+
+library(dplyr)
+
+AbweiDurch<- umsatzdaten %>% 
+    group_by(Month = format(as.Date(Datum), '%b-%Y')) %>%
+    mean(umsatzdaten$Temperatur), )
+View(umsatzdaten) 
+
+umsatzdaten$Temperatur1<-mean(as.numeric(umsatzdaten$Temperatur)
+
+AbweiDurch<- umsatzdaten %>% 
+    group_by(Month = format(as.Date(Datum), '%b-%Y')) %>%
+    mean(umsatzdaten$Temperatur), )
+
+library(data.table)
+setDT(umsatzdaten)[,lapply(.SD, function(x) if(length(na.omit(x)) >=15)
+       mean(x, na.rm=TRUE) else NA_real_) ,
+             by = .(Month= format(as.IDate(Datum), '%b-%Y'))]
+
+
+AbweiDurch<- umsatzdaten %>% 
+    group_by(Month = format(as.Date(Datum), '%b-%Y')) %>%
+    mean(Temperatur, trim = 0, na.rm=FALSE)
+
+library(dplyr)
+library(lubridate)
+umsatzdaten  %>% group_by(year(=floor_date(date(), "year")) %>%
+   summarize(Temperatur1=sum(Temperatur))
+str(umsatzdaten)
+=======
+```
 
