@@ -25,6 +25,15 @@ library(e1071)
 umsatzdaten <- read_csv("umsatzdaten_gekuerzt.csv")
 ```
 
+Vorhersage
+```{r}
+#Bestimme das zu vorhersagende Datum und schreibe es in den Datensatz ein
+vorhersage_date <- as.Date("2019-06-04")
+
+umsatzdaten <- rbind(umsatzdaten, tibble(Datum = rep(vorhersage_date,6), Warengruppe = (1:6), Umsatz=NA))
+```
+
+
 Erstellung der Variable mit Wochentag
 ```{r}
 # Berechnung der Wochentage
@@ -42,6 +51,7 @@ yq <- as.yearqtr(as.yearmon(umsatzdaten$Datum, "%m/%d/%Y") + 1/12)
 # Berechnung der Jahreszeit
 umsatzdaten$jahreszeit <- factor(format(yq, "%q"), levels = 1:4, 
       labels = c("Winter", "Frueling", "Sommer", "Herbst"))
+rm(yq)
 ```
 
 Erstellung der Variable mit Feiertage 
@@ -86,24 +96,20 @@ library(readr)
 library(dplyr)
 
 wetter <- read_csv("wetter.csv")
-View(wetter)
 
 wetter[is.na(wetter)] <-0
 str(wetter)
 
 umsatzdaten<- left_join(umsatzdaten, wetter)
-View(umsatzdaten)
 
 ## Umformen der numerischen Variable Windgeschwindigkeit in Faktorvariabel 
 umsatzdaten$Windgeschwindigkeit <- cut(umsatzdaten$Windgeschwindigkeit, breaks = c(0,10.7,20.7,37), labels=c("Brise", "Wind","Sturm"), right=FALSE)
 umsatzdaten$Windgeschwindigkeit[1:10]
-View(umsatzdaten)
 
 
 ## Umformen der numerischen Variable Temperatur
 umsatzdaten$Temperatur <- as.numeric(as.character(umsatzdaten$Temperatur))
 umsatzdaten$Temperatur<- cut(umsatzdaten$Temperatur, breaks = c(-20,1,11,21,31,45), labels=c("eisig", "kalt", "moderat", "sommerlich", "heiß"), right=FALSE)
-View(umsatzdaten)
 ```
 
 

@@ -18,6 +18,15 @@ library(ggplot2)
 
 ```
 
+Vorhersage abspalten
+```{r}
+#Trenne das zu vorhersagende Datum wieder aus dem Datensatz
+vorhersage <- umsatzdaten[umsatzdaten$Datum==vorhersage_date, ]
+
+umsatzdaten <- umsatzdaten %>%
+  filter(!Datum==vorhersage_date)
+```
+
 
 ## Aufteilung des Datensatzes in Trainings- und Testdaten
 
@@ -93,6 +102,13 @@ pred_train
 mape(train_dataset$Umsatz, pred_train)
 ```
 
+Entferne Spalten die NA enthalten
+```{r}
+test_dataset$Wettercode <- NULL
+test_dataset$Temperatur <- NULL
+test_dataset$Bewoelkung <- NULL
+test_dataset$Windgeschwindigkeit <- NULL
+```
 
 
 ```{r}
@@ -101,8 +117,21 @@ pred_test <- predict(svm_tune$best.model, test_dataset)
 # Calculating the prediction quality for the training data using the MAPE
 mape(test_dataset$Umsatz, pred_test)
 ```
+
+Entferne Spalten die NA enthalten
+```{r}
+vorhersage$Wettercode <- NULL
+vorhersage$Temperatur <- NULL
+vorhersage$Bewoelkung <- NULL
+vorhersage$Windgeschwindigkeit <- NULL
+```
+
+
 04.06.2019 Vorhersage 
 ```{r}
-
+# Calculating the prediction for the prediction-date using the best model according to the grid search
+vorhersage[is.na(vorhersage)] <-0
+pred_vorhersage <- predict(svm_tune$best.model, vorhersage)
+pred_vorhersage
 ```
 
