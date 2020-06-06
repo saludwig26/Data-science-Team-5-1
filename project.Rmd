@@ -328,41 +328,6 @@ rbind(mape(test$Umsatz, predict(mod1, newdata=test)),
 ```
 
 
-## Training the SVM  -- TO DO!
-```{r}
-
-# Estimation of an SVM with optimized weighting parameters and given standard hyper parameters
-# Typically not used; instead, the function svm_tune is used in order to also get a model with optimized hyper parameters
-model_svm <- svm(Umsatz ~ Warengruppe, train_dataset)
-model_svm <- svm(Umsatz ~ Warengruppe, train)
-```
-
-```{r}
-# Estimation of various SVM (each with optimized weighting parameters) using systematically varied hyper parameters (typically called 'grid search' approach) and cross validation
-# the resulting object includes the optimal model in the element named 'best.model'
-svm_tune <- tune(svm, Umsatz ~ Warengruppe, data=train,
-                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
-```
-
-## Checking the Prediction Quality -- TO DO!
-```{r}
-# Calculating the prediction for the training data using the best model according to the grid search
-pred_train <- predict(svm_tune$best.model, train)
-# Calculating the prediction quality for the training data using the MAPE
-mape(train$Umsatz, pred_train)
-```
-
-
-```{r}
-# Calculating the prediction for the test data using the best model according to the grid search
-pred_test <- predict(svm_tune$best.model, test)
-# Calculating the prediction quality for the training data using the MAPE
-mape(test$Umsatz, pred_test)
-```
-
-
-
-
 #TO DO
 Estimation of Neural Net Data Preparation
 ### Vorbereitung der Umgebung ###
