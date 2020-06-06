@@ -97,6 +97,12 @@ svm_tune <- tune(svm, Umsatz ~ as.factor(Warengruppe) + as.factor(wochentag) + j
 #folgendes funktioniert!
 svm_tune <- tune(svm, Umsatz ~ as.factor(Warengruppe) + wochentag  + KielerWoche, data=train_dataset_org,
                  ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
+#funktioniert #fehler 25,68%
+svm_tune <- tune(svm, Umsatz ~ as.factor(Warengruppe) + as.factor(wochentag)  + KielerWoche + jahreszeit, data=train_dataset_org,
+                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
+#test
+svm_tune <- tune(svm, Umsatz ~ as.factor(Warengruppe) + as.factor(wochentag)  + KielerWoche + jahreszeit+schulferien+holiday, data=train_dataset_org,
+                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
 
 #test:nicht funktiniert
 svm_tune <- tune(svm, Umsatz ~ as.factor(Warengruppe) + as.factor(wochentag)  + KielerWoche+ as.factor(Temperatur), data=train_dataset_org,
@@ -130,7 +136,7 @@ mape(train_dataset_org$Umsatz, pred_train)
 ```
 
 
-```{r}
+
 Entferne Spalten die NA enthalten
 ```{r}
 test_dataset$Wettercode <- NULL
