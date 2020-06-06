@@ -53,6 +53,10 @@ umsatzdaten$jahreszeit <- factor(format(yq, "%q"), levels = 1:4,
       labels = c("Winter", "Frueling", "Sommer", "Herbst"))
 rm(yq)
 ```
+Erstellung der Variable "monat"
+```{r}
+umsatzdaten <- mutate(umsatzdaten, monat = factor(format(Datum, "%m")))
+```
 
 Erstellung der Variable mit Feiertage 
 ```{r}
@@ -101,6 +105,10 @@ wetter[is.na(wetter)] <-0
 str(wetter)
 
 umsatzdaten<- left_join(umsatzdaten, wetter)
+
+#warm (TRUE) oder kalt (FALSE)
+umsatzdaten$warmTemp<-ifelse(umsatzdaten$Temperatur > 18,TRUE,FALSE)
+
 
 ## Umformen der numerischen Variable Windgeschwindigkeit in Faktorvariabel 
 umsatzdaten$Windgeschwindigkeit <- cut(umsatzdaten$Windgeschwindigkeit, breaks = c(0,10.7,20.7,37), labels=c("Brise", "Wind","Sturm"), right=FALSE)
