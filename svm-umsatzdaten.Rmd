@@ -13,9 +13,6 @@ library(e1071)
 library(Metrics)
 library(dplyr)
 library(ggplot2)
-
-
-
 ```
 
 Vorhersage abspalten
@@ -81,6 +78,12 @@ train_dataset_org$Wettercode <- NULL
 train_dataset_org$Temperatur <- NULL
 train_dataset_org$Bewoelkung <- NULL
 train_dataset_org$Windgeschwindigkeit <- NULL
+
+test_dataset$Wettercode <- NULL
+test_dataset$Temperatur <- NULL
+test_dataset$Bewoelkung <- NULL
+test_dataset$Windgeschwindigkeit <- NULL
+
 ```
 
 Support Vector Machine für kompletten Datensatz
@@ -89,11 +92,25 @@ Support Vector Machine für kompletten Datensatz
 # the resulting object includes the optimal model in the element named 'best.model'
 svm_tune <- tune(svm, Umsatz ~ as.factor(Warengruppe) + as.factor(wochentag) + jahreszeit + KielerWoche, data=train_dataset_org,
                  ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
+
+
+#folgendes funktioniert!
+svm_tune <- tune(svm, Umsatz ~ as.factor(Warengruppe) + wochentag  + KielerWoche, data=train_dataset_org,
+                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
+
+#test:nicht funktiniert
+svm_tune <- tune(svm, Umsatz ~ as.factor(Warengruppe) + as.factor(wochentag)  + KielerWoche+ as.factor(Temperatur), data=train_dataset_org,
+                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
+
+#test2 nicht funktioniert
+svm_tune <- tune(svm, Umsatz ~ as.factor(Warengruppe) + as.factor(wochentag)  + KielerWoche+ as.logical(holiday), data=train_dataset_org,
+                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
+
 ```
 
 
 ## Checking the Prediction Quality
-
+#with incomplete data set "train_dataset"
 ```{r}
 # Calculating the prediction for the training data using the best model according to the grid search
 pred_train <- predict(svm_tune$best.model, train_dataset)
@@ -102,6 +119,18 @@ pred_train
 mape(train_dataset$Umsatz, pred_train)
 ```
 
+## Checking the Prediction Quality
+#with complete Data set "train_dataset_org"
+```{r}
+# Calculating the prediction for the training data using the best model according to the grid search
+pred_train <- predict(svm_tune$best.model, train_dataset_org)
+pred_train
+# Calculating the prediction quality for the training data using the MAPE
+mape(train_dataset_org$Umsatz, pred_train)
+```
+
+
+```{r}
 Entferne Spalten die NA enthalten
 ```{r}
 test_dataset$Wettercode <- NULL
