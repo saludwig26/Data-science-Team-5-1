@@ -70,20 +70,37 @@ get.norm_values <- function (.data, select_columns = NULL) {
 ###################################################
 ### Datenaufbereitung ####
 
+# Booleans in 0 und 1 Umwandlung fur Neuronale Netzwerke
+
+umwandlung_umsatzdaten  <- umsatzdaten  %>%
+  mutate(holiday = ifelse(holiday == "TRUE", 1, 0)) %>%
+  mutate(sylvester = ifelse(sylvester == "TRUE", 1, 0)) %>%
+  mutate(schulferien = ifelse(schulferien == "TRUE", 1, 0)) %>%
+  mutate(KielerWoche = ifelse(KielerWoche == "TRUE", 1, 0)) 
+  umwandlung_umsatzdaten$wochentag <- as.numeric(umsatzdaten$wochentag) 
+  umwandlung_umsatzdaten$jahreszeit <- as.numeric(umsatzdaten$jahreszeit)
+#   
+# junk$nm <- as.character(junk$nm)
+# junk$nm[junk$nm == "B"] <- "b"
+# data.frame$column.name [data.frame$column.name == "false"] <- 0
+# ifelse(logical(), numeric(), numeric())
+
+
 # Rekodierung von kategoriellen Variablen (zu Dummy-Variablen)
-dummy_list <- c("Warengruppe", "wochentag")
-umsatzdaten_dummy = dummy_cols(umsatzdaten, dummy_list)
+dummy_list <- c("Warengruppe") #, "wochentag", "jahreszeit")
+umsatzdaten_dummy = dummy_cols(umwandlung_umsatzdaten, dummy_list)
 
 # Definition von Variablenlisten für die Dummies, um das Arbeiten mit diesen zu erleichtern
 Warengruppe_dummies = c('Warengruppe_1', 'Warengruppe_2','Warengruppe_3', 'Warengruppe_4','Warengruppe_5','Warengruppe_6')
-wochentag_dummies= c('Monday', 'Tuesday','Wednesday', 'Thursday', 'Friday','Saturday', 'Sunday') 
+# wochentag_dummies= c('Monday', 'Tuesday','Wednesday', 'Thursday', 'Friday','Saturday', 'Sunday') 
+# jahreszeit_dummies= c("Winter", "Frueling", "Sommer", "Herbst")
 
 #condition_dummies = c('condition_1', 'condition_2', 'condition_3', 'condition_4', 'condition_5')
 #view_dummies = c('view_0', 'view_1', 'view_2', 'view_3','view_4')
 
 
 # Standardisierung aller Feature Variablen und der Label Variable
-norm_list <- c("Umsatz", Warengruppe_dummies) # Liste aller Variablen
+norm_list <- c("Umsatz","wochentag", "jahreszeit", "holiday", "sylvester", "schulferien", "KielerWoche", Warengruppe_dummies) #, wochentag_dummies, jahreszeit_dummies) # Liste aller Variablen
 norm_values_list <- get.norm_values(umsatzdaten_dummy, norm_list)    # Berechnung der Mittelwerte und Std.-Abw. der Variablen
 umsatzdaten_norm <- norm_cols(umsatzdaten_dummy, norm_values_list) # Standardisierung der Variablen
 
@@ -93,7 +110,7 @@ umsatzdaten_norm <- norm_cols(umsatzdaten_dummy, norm_values_list) # Standardisi
 ### Definition der Feature-Variablen und der Label-Variable ####
 
 # Definition der Features (der unabhängigen Variablen auf deren Basis die Vorhersagen erzeugt werden sollen)
-features = c('Warengruppe', 'wochentag', Warengruppe_dummies)
+features = c("wochentag", "jahreszeit", "holiday", "sylvester", "schulferien", "KielerWoche", Warengruppe_dummies) #, wochentag_dummies, jahreszeit_dummies)
 # Definition der Label-Variable (der abhaengigen Variable, die vorhergesagt werden soll) sowie
 label = 'Umsatz'
 
