@@ -70,6 +70,13 @@ Support Vector Machine für verkleinerten Datensatz
 # the resulting object includes the optimal model in the element named 'best.model'
 svm_tune <- tune(svm, Umsatz ~ as.factor(Warengruppe) + as.factor(wochentag) + jahreszeit + KielerWoche, data=train_dataset,
                  ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
+
+#MAPE 54,9
+svm_tune <- tune(svm, Umsatz ~ as.factor(Warengruppe) + as.factor(wochentag) + jahreszeit + KielerWoche+warmTemp, data=train_dataset,
+                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
+
+
+
 ```
 
 Entferne Spalten die NA enthalten
@@ -97,10 +104,39 @@ svm_tune <- tune(svm, Umsatz ~ as.factor(Warengruppe) + as.factor(wochentag) + j
 #folgendes funktioniert!
 svm_tune <- tune(svm, Umsatz ~ as.factor(Warengruppe) + wochentag  + KielerWoche, data=train_dataset_org,
                  ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
-#funktioniert #fehler 25,68%
+#funktioniert #MAPE 25,68%
 svm_tune <- tune(svm, Umsatz ~ as.factor(Warengruppe) + as.factor(wochentag)  + KielerWoche + jahreszeit, data=train_dataset_org,
                  ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
-#test
+
+svm_tune <- tune(svm, Umsatz ~ as.factor(Warengruppe) + as.factor(wochentag)  + KielerWoche + jahreszeit+as.factor(month), data=train_dataset_org,
+                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
+
+#MAPE  0,89
+svm_tune <- tune(svm, Umsatz ~ as.factor(Warengruppe) + as.factor(wochentag)  + KielerWoche + jahreszeit+VerlaengertesWE_Mo, data=train_dataset_org,
+                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
+
+
+#MAPE 89%
+svm_tune <- tune(svm, Umsatz ~ as.factor(Warengruppe) + as.factor(wochentag)  + KielerWoche + jahreszeit+warmTemp, data=train_dataset_org,
+                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
+
+
+
+##funktioniert nicht wegen Temp MAPE:
+svm_tune <- tune(svm, Umsatz ~ as.factor(Warengruppe) + as.factor(wochentag)  + KielerWoche + jahreszeit+Temperatur, data=train_dataset_org,
+                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
+
+
+#funktioniert #MAPE 0.2605459 und test MAPE 0.2590806
+svm_tune <- tune(svm, Umsatz ~ as.factor(Warengruppe) + as.factor(wochentag)  + KielerWoche + jahreszeit+ VerlaengertesWE_Mo, data=train_dataset_org,
+                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
+
+
+#test #MAPE #26,05
+svm_tune <- tune(svm, Umsatz ~ as.factor(Warengruppe) + as.factor(wochentag)  + KielerWoche + jahreszeit+sylvester, data=train_dataset_org,
+                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
+
+#test 26,13%
 svm_tune <- tune(svm, Umsatz ~ as.factor(Warengruppe) + as.factor(wochentag)  + KielerWoche + jahreszeit+schulferien+holiday, data=train_dataset_org,
                  ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
 
