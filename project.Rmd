@@ -441,30 +441,6 @@ test_labels = house_pricing_norm[-train_ind, label]
 
 ```
 
-#TO DO
-```{r}
-# Import Libraries
-library(reticulate)
-
-
-# Importing Data
-data <- mpg
-
-```
-
-
-```{python}
-year = r.data['year']
-
-```
-
-
-```{r}
-table(py$year)
-
-```
-
-
 
 hat der Bäcker an manchen Tagen geschlossen = kein Umsatz
 Vorher/nachher mehr umsatz 
