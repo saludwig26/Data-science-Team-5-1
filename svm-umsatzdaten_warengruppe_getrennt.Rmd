@@ -102,20 +102,30 @@ Support Vector Machine für kompletten Datensatz
 ```{r}
 # Estimation of various SVM (each with optimized weighting parameters) using systematically varied hyper parameters (typically called 'grid search' approach) and cross validation
 # the resulting object includes the optimal model in the element named 'best.model'
-svm_tune_W1 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche, data=subset(train_dataset_org, Warengruppe=="1"),
-                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
-svm_tune_W2 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche, data=subset(train_dataset_org, Warengruppe=="2"),
-                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
-svm_tune_W3 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche, data=subset(train_dataset_org, Warengruppe=="3"),
-                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
-svm_tune_W4 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche, data=subset(train_dataset_org, Warengruppe=="4"),
-                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
-svm_tune_W5 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche, data=subset(train_dataset_org, Warengruppe=="5"),
-                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
-svm_tune_W6 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche, data=subset(train_dataset_org, Warengruppe=="6"),
+
+#alle ohne warmTemp, ohne dayoff_b4, TempAbweichung1
+#Warengruppe 1: am besten mit holiday und schulferien ohne sylvester 0.200038 
+svm_tune_W1 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche+monat+holiday+schulferien, data=subset(train_dataset_org, Warengruppe=="1"),
                  ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
 
+#Warengruppe 2: am besten ohne holiday& sylvester aber mit schulferien  0.15564 (mit holiday 0.1646284)
+svm_tune_W2 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche+monat +schulferien, data=subset(train_dataset_org, Warengruppe=="2"),
+                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
 
+# Warengruppe 3: am besten mit holiday und schulferien 0.2012541
+svm_tune_W3 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche+monat+holiday+schulferien, data=subset(train_dataset_org, Warengruppe=="3"),
+                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
+
+#Warengruppe 4:am besten mit holiday  und mit schulferien ohne sylvester 0.2044578
+svm_tune_W4 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche+monat+holiday+schulferien, data=subset(train_dataset_org, Warengruppe=="4"),
+                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
+
+#Warengruppe 5: am besten mit holiday und mit schulferien ohne sylvester 0.1461067
+svm_tune_W5 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche+monat+holiday+schulferien, data=subset(train_dataset_org, Warengruppe=="5"),
+                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
+#Warengruppe 6:am besten ohne holiday&sylvester aber mit schulferien 0.4107755;  
+svm_tune_W6 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche+monat+schulferien, data=subset(train_dataset_org, Warengruppe=="6"),
+                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
 
 ```
 
@@ -144,11 +154,11 @@ mape(subset(train_dataset$Umsatz, train_dataset$Warengruppe=="6"), pred_train_W6
 ```{r}
 # Calculating the prediction for the training data using the best model according to the grid search
 pred_train_W1 <- predict(svm_tune_W1$best.model, subset(train_dataset_org, Warengruppe=="1"))
-pred_train_W2 <- predict(svm_tune_W2$best.model, subset(train_dataset_org, Warengruppe=="1"))
-pred_train_W3 <- predict(svm_tune_W3$best.model, subset(train_dataset_org, Warengruppe=="1"))
-pred_train_W4 <- predict(svm_tune_W4$best.model, subset(train_dataset_org, Warengruppe=="1"))
-pred_train_W5 <- predict(svm_tune_W5$best.model, subset(train_dataset_org, Warengruppe=="1"))
-pred_train_W6 <- predict(svm_tune_W6$best.model, subset(train_dataset_org, Warengruppe=="1"))
+pred_train_W2 <- predict(svm_tune_W2$best.model, subset(train_dataset_org, Warengruppe=="2"))
+pred_train_W3 <- predict(svm_tune_W3$best.model, subset(train_dataset_org, Warengruppe=="3"))
+pred_train_W4 <- predict(svm_tune_W4$best.model, subset(train_dataset_org, Warengruppe=="4"))
+pred_train_W5 <- predict(svm_tune_W5$best.model, subset(train_dataset_org, Warengruppe=="5"))
+pred_train_W6 <- predict(svm_tune_W6$best.model, subset(train_dataset_org, Warengruppe=="6"))
 
 # Calculating the prediction quality for the training data using the MAPE
 mape(subset(train_dataset_org$Umsatz, train_dataset_org$Warengruppe=="1"), pred_train_W1)
@@ -200,7 +210,27 @@ vorhersage$Windgeschwindigkeit <- NULL
 ```{r}
 # Calculating the prediction for the prediction-date using the best model according to the grid search
 vorhersage[is.na(vorhersage)] <-0
-pred_vorhersage <- predict(svm_tune$best.model, vorhersage)
+pred_vorhersage <- predict(svm_tune_W1$best.model, vorhersage)
+pred_vorhersage
+
+vorhersage[is.na(vorhersage)] <-0
+pred_vorhersage <- predict(svm_tune_W2$best.model, vorhersage)
+pred_vorhersage
+
+vorhersage[is.na(vorhersage)] <-0
+pred_vorhersage <- predict(svm_tune_W3$best.model, vorhersage)
+pred_vorhersage
+
+vorhersage[is.na(vorhersage)] <-0
+pred_vorhersage <- predict(svm_tune_W4$best.model, vorhersage)
+pred_vorhersage
+
+vorhersage[is.na(vorhersage)] <-0
+pred_vorhersage <- predict(svm_tune_W5$best.model, vorhersage)
+pred_vorhersage
+
+vorhersage[is.na(vorhersage)] <-0
+pred_vorhersage <- predict(svm_tune_W6$best.model, vorhersage)
 pred_vorhersage
 ```
 
