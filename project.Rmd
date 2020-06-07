@@ -148,7 +148,7 @@ mean_temperature <- read_csv("mean_temperature.csv")
 mean_temperature$monat <- as.factor(mean_temperature$monat)
 wetter <- left_join(wetter, mean_temperature)
 
-wetter$Temp_abweichung <- ifelse(wetter$Temperatur/wetter$mean < 0.5, 1, 0)
+wetter$Temp_abweichung <- ifelse(wetter$mean - wetter$Temperatur < 5, 1, 0)
 ```
 
 Einbindung Wetterdaten
