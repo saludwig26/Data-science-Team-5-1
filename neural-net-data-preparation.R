@@ -97,8 +97,8 @@ umsatzdaten_dummy = dummy_cols(umwandlung_umsatzdaten, dummy_list)
 
 # Definition von Variablenlisten für die Dummies, um das Arbeiten mit diesen zu erleichtern
 Warengruppe_dummies = c('Warengruppe_1', 'Warengruppe_2','Warengruppe_3', 'Warengruppe_4','Warengruppe_5','Warengruppe_6')
-# wochentag_dummies= c('Monday', 'Tuesday','Wednesday', 'Thursday', 'Friday','Saturday', 'Sunday') 
-# jahreszeit_dummies= c("Winter", "Frueling", "Sommer", "Herbst")
+wochentag_dummies= c('wochentag_1', 'wochentag_2','wochentag_3', 'wochentag_4', 'wochentag_5','wochentag_6', 'wochentag_7') 
+jahreszeit_dummies= c("jahreszeit_1", "jahreszeit_2", "jahreszeit_3", "jahreszeit_4")
 
 #condition_dummies = c('condition_1', 'condition_2', 'condition_3', 'condition_4', 'condition_5')
 #view_dummies = c('view_0', 'view_1', 'view_2', 'view_3','view_4')
@@ -115,7 +115,7 @@ umsatzdaten_norm <- norm_cols(umsatzdaten_dummy, norm_values_list) # Standardisi
 ### Definition der Feature-Variablen und der Label-Variable ####
 
 # Definition der Features (der unabhängigen Variablen auf deren Basis die Vorhersagen erzeugt werden sollen)
-features = c("wochentag", "monat", "holiday", Warengruppe_dummies) #"monat" ,"holiday", "sylvester", "schulferien", "KielerWoche", "Bewoelkung", "Temperatur", "Windgeschwindigkeit", "Wettercode","warmTemp"
+features = c("KielerWoche" , Warengruppe_dummies, wochentag_dummies, jahreszeit_dummies) #"monat" ,"holiday", "sylvester", "schulferien", "KielerWoche", "Bewoelkung", "Temperatur", "Windgeschwindigkeit", "Wettercode","warmTemp"
 # Definition der Label-Variable (der abhaengigen Variable, die vorhergesagt werden soll) sowie
 label = 'Umsatz'
 
