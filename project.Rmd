@@ -68,6 +68,42 @@ umsatzdaten$sylvester <- !is.na(umsatzdaten$sylvester)
 rm(holidays)
 ```
 
+
+hat der Bäcker an manchen Tagen geschlossen = kein Umsatz
+Vorher/nachher mehr umsatz 
+```{r}
+#detach("package:RQuantLib", unload = TRUE)
+library(timeDate)
+all_dates <- tibble(Datum = as.Date(timeSequence(as.Date("2013-07-01"),as.Date("2019-06-03"))))
+
+missing_dates <- anti_join(all_dates, umsatzdaten)
+missing_dates <- left_join(missing_dates, holidays)
+missing_dates[,2-3] <- !is.na(missing_dates[,2-3])
+
+dayoff_after <- tibble(Datum = missing_dates$Datum + 1, dayoff_after=TRUE)
+dayoff_b4 <- tibble(Datum = missing_dates$Datum - 1, dayoff_b4=TRUE)
+umsatzdaten <- left_join(umsatzdaten, dayoff_after)
+umsatzdaten <- left_join(umsatzdaten, dayoff_b4)
+
+#Setze für NA in der Tabelle den Wert FALSE ein
+umsatzdaten$dayoff_after <- !is.na(umsatzdaten$dayoff_after)
+umsatzdaten$dayoff_b4 <- !is.na(umsatzdaten$dayoff_b4)
+
+
+#Tag vor oder nachdem der Bäcker an einem FEIERTAG geschlossen hatte
+dayoff_after_holiday <- tibble(Datum = missing_dates$Datum[missing_dates$holiday==TRUE] + 1, dayoff_after_holiday=TRUE)
+dayoff_b4_holiday <- tibble(Datum = missing_dates$Datum[missing_dates$holiday==TRUE] - 1, dayoff_b4_holiday=TRUE)
+umsatzdaten <- left_join(umsatzdaten, dayoff_after_holiday)
+umsatzdaten <- left_join(umsatzdaten, dayoff_b4_holiday)
+
+#Setze für NA in der Tabelle den Wert FALSE ein
+umsatzdaten$dayoff_after_holiday <- !is.na(umsatzdaten$dayoff_after_holiday)
+umsatzdaten$dayoff_b4_holiday <- !is.na(umsatzdaten$dayoff_b4_holiday)
+
+View(umsatzdaten)
+```
+
+
 Langes Wochendende (Liegt vor dem Saturday oder nach dem Sunday ein Feiertag? bzw. ist Montag oder Freitag ein Feiertag?)
 ```{r}
 #Ist Monday oder Freitag == umsatzdaten$holiday == "TRUE"
@@ -413,7 +449,6 @@ house_pricing_norm <- norm_cols(house_pricing_dummy, norm_values_list) # Standar
 
 #TO DO
 ### Definition der Feaure-Variablen und der Label-Variable
-
 ```{r}
 # Definition der Features (der unabhängigen Variablen auf deren Basis die Vorhersagen erzeugt werden sollen)
 features = c('sqft_lot', 'waterfront', 'grade', 'bathrooms', view_dummies, condition_dummies)
@@ -423,7 +458,6 @@ label = 'price_norm'
 
 #TO DO
 ### Definition von Trainings- und Testdatensatz ###
-
 ```{r}
 # Zufallszähler setzen, um die zufällige Partitionierung bei jedem Durchlauf gleich zu halten
 set.seed(1)
@@ -441,57 +475,6 @@ test_labels = house_pricing_norm[-train_ind, label]
 
 ```
 
-
-hat der Bäcker an manchen Tagen geschlossen = kein Umsatz
-Vorher/nachher mehr umsatz 
-```{r}
-# #detach("package:RQuantLib", unload = TRUE)
-# library(timeDate)
-# all_dates <- tibble(Datum = as.Date(timeSequence(as.Date("2013-07-01"),as.Date("2019-06-03"))))
-# 
-# missing_dates <- anti_join(all_dates, umsatzdaten)
-# 
-# 
-# detach("package:timeDate", unload = TRUE)
-# library(RQuantLib)
-# missing_dates$holiday <- isHoliday("Germany", missing_dates$Datum)
-# missing_dates$WochentagMoFr <- !isWeekend("Germany", missing_dates$Datum)
-# 
-# detach("package:RQuantLib", unload = TRUE)
-# library(timeDate)
-# all_dates <- tibble(Datum = as.Date(timeSequence(as.Date("2013-07-01"),as.Date("2019-06-03"))))
-# 
-# missing_dates <- anti_join(all_dates, umsatzdaten)
-# 
-# 
-# detach("package:timeDate", unload = TRUE)
-# library(RQuantLib)
-# missing_dates$holiday <- isHoliday("Germany", missing_dates$Datum)
-# missing_dates$WochentagMoFr <- !isWeekend("Germany", missing_dates$Datum)
-# 
-# 
-# dayoff_after <- tibble(Datum = missing_dates$Datum + 1, dayoff_after=TRUE)
-# dayoff_b4 <- tibble(Datum = missing_dates$Datum - 1, dayoff_b4=TRUE)
-# umsatzdaten <- left_join(umsatzdaten, dayoff_after)
-# umsatzdaten <- left_join(umsatzdaten, dayoff_b4)
-# 
-# #Setze für NA in der Tabelle den Wert FALSE ein
-# umsatzdaten$dayoff_after <- !is.na(umsatzdaten$dayoff_after)
-# umsatzdaten$dayoff_b4 <- !is.na(umsatzdaten$dayoff_b4)
-# 
-# 
-# #Tag vor oder nachdem der Bäcker an einem FEIERTAG geschlossen hatte
-# dayoff_after_holiday <- tibble(Datum = missing_dates$Datum[missing_dates$holiday==TRUE] + 1, dayoff_after_holiday=TRUE)
-# dayoff_b4_holiday <- tibble(Datum = missing_dates$Datum[missing_dates$holiday==TRUE] - 1, dayoff_b4_holiday=TRUE)
-# umsatzdaten <- left_join(umsatzdaten, dayoff_after_holiday)
-# umsatzdaten <- left_join(umsatzdaten, dayoff_b4_holiday)
-# 
-# #Setze für NA in der Tabelle den Wert FALSE ein
-# umsatzdaten$dayoff_after_holiday <- !is.na(umsatzdaten$dayoff_after_holiday)
-# umsatzdaten$dayoff_b4_holiday <- !is.na(umsatzdaten$dayoff_b4_holiday)
-# 
-# View(umsatzdaten)
-```
 
 ```{r}
 #Ignore!
