@@ -68,7 +68,6 @@ umsatzdaten$sylvester <- !is.na(umsatzdaten$sylvester)
 rm(holidays)
 ```
 
-
 hat der Bäcker an manchen Tagen geschlossen = kein Umsatz
 Vorher/nachher mehr umsatz 
 ```{r}
@@ -77,8 +76,6 @@ library(timeDate)
 all_dates <- tibble(Datum = as.Date(timeSequence(as.Date("2013-07-01"),as.Date("2019-06-03"))))
 
 missing_dates <- anti_join(all_dates, umsatzdaten)
-missing_dates <- left_join(missing_dates, holidays)
-missing_dates[,2-3] <- !is.na(missing_dates[,2-3])
 
 dayoff_after <- tibble(Datum = missing_dates$Datum + 1, dayoff_after=TRUE)
 dayoff_b4 <- tibble(Datum = missing_dates$Datum - 1, dayoff_b4=TRUE)
@@ -90,19 +87,29 @@ umsatzdaten$dayoff_after <- !is.na(umsatzdaten$dayoff_after)
 umsatzdaten$dayoff_b4 <- !is.na(umsatzdaten$dayoff_b4)
 
 
-#Tag vor oder nachdem der Bäcker an einem FEIERTAG geschlossen hatte
-dayoff_after_holiday <- tibble(Datum = missing_dates$Datum[missing_dates$holiday==TRUE] + 1, dayoff_after_holiday=TRUE)
-dayoff_b4_holiday <- tibble(Datum = missing_dates$Datum[missing_dates$holiday==TRUE] - 1, dayoff_b4_holiday=TRUE)
-umsatzdaten <- left_join(umsatzdaten, dayoff_after_holiday)
-umsatzdaten <- left_join(umsatzdaten, dayoff_b4_holiday)
+# #Tag vor oder nachdem der Bäcker an einem FEIERTAG geschlossen hatte
+# holidays <- read.csv("Holiday_List")
+# holidays$Datum <- as.Date(holidays$Datum)
+# missing_dates <- left_join(missing_dates, holidays)
+# missing_dates[,2-3] <- !is.na(missing_dates[,2-3])
+# rm(holidays)
+# 
+# dayoff_after_holiday <- tibble(Datum = missing_dates$Datum[missing_dates$holiday==TRUE] + 1, dayoff_after_holiday=TRUE)
+# dayoff_b4_holiday <- tibble(Datum = missing_dates$Datum[missing_dates$holiday==TRUE] - 1, dayoff_b4_holiday=TRUE)
+# umsatzdaten <- left_join(umsatzdaten, dayoff_after_holiday)
+# umsatzdaten <- left_join(umsatzdaten, dayoff_b4_holiday)
+# 
+# #Setze für NA in der Tabelle den Wert FALSE ein
+# umsatzdaten$dayoff_after_holiday <- !is.na(umsatzdaten$dayoff_after_holiday)
+# umsatzdaten$dayoff_b4_holiday <- !is.na(umsatzdaten$dayoff_b4_holiday)
 
-#Setze für NA in der Tabelle den Wert FALSE ein
-umsatzdaten$dayoff_after_holiday <- !is.na(umsatzdaten$dayoff_after_holiday)
-umsatzdaten$dayoff_b4_holiday <- !is.na(umsatzdaten$dayoff_b4_holiday)
-
-View(umsatzdaten)
+rm(dayoff_after)
+rm(dayoff_b4)
+rm(missing_dates)
+rm(all_dates)
+# 
+# View(umsatzdaten)
 ```
-
 
 Langes Wochendende (Liegt vor dem Saturday oder nach dem Sunday ein Feiertag? bzw. ist Montag oder Freitag ein Feiertag?)
 ```{r}
