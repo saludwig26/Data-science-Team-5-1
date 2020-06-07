@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
  
 ```
-
+LIBRARIES
 ```{r}
 library(readr)
 library(lubridate)
@@ -20,7 +20,7 @@ library(zoo)
 library(e1071)
 ```
 
-
+IMPORT FILE
 ```{r}
 umsatzdaten <- read_csv("umsatzdaten_gekuerzt.csv")
 ```
@@ -32,7 +32,6 @@ vorhersage_date <- as.Date("2019-06-04")
 
 umsatzdaten <- rbind(umsatzdaten, tibble(Datum = rep(vorhersage_date,6), Warengruppe = (1:6), Umsatz=NA))
 ```
-
 
 Erstellung der Variable mit Wochentag
 ```{r}
@@ -136,13 +135,28 @@ umsatzdaten$KielerWoche <- !is.na(umsatzdaten$KielerWoche)
 rm(kiwo)
 ```
 
+Temperatur Abweichung
+```{r}
+library(tidyr)
+wetter <- read_csv("wetter.csv")
+wetter <- mutate(wetter, monat = as.factor(format(Datum, "%m")))
+
+wetter %>%
+group_by(monat) %>% summarize(mean=mean(Temperatur)) %>%  write_csv("mean_temperature.csv")
+
+mean_temperature <- read_csv("mean_temperature.csv")
+mean_temperature$monat <- as.factor(mean_temperature$monat)
+wetter <- left_join(wetter, mean_temperature)
+
+wetter$Temp_abweichung <- ifelse(wetter$Temperatur/wetter$mean < 0.5, 1, 0)
+```
 
 Einbindung Wetterdaten
 ```{r}
 library(readr)
 library(dplyr)
 
-wetter <- read_csv("wetter.csv")
+#wetter <- read_csv("wetter.csv")
 
 wetter[is.na(wetter)] <-0
 str(wetter)
@@ -160,11 +174,10 @@ umsatzdaten$Windgeschwindigkeit[1:10]
 
 ## Umformen der numerischen Variable Temperatur
 umsatzdaten$Temperatur <- as.numeric(as.character(umsatzdaten$Temperatur))
-umsatzdaten$Temperatur<- cut(umsatzdaten$Temperatur, breaks = c(-20,1,11,21,31,45), labels=c("eisig", "kalt", "moderat", "sommerlich", "heiß"), right=FALSE)
+umsatzdaten$Temperatur_labels <- cut(umsatzdaten$Temperatur, breaks = c(-20,1,11,21,31,45), labels=c("eisig", "kalt", "moderat", "sommerlich", "heiß"), right=FALSE)
 ```
 
-
-
+Wettercode
 ```{r}
 #Wettercode - Umformen der numerischen Variable Wettercode in Faktorvariabel 
 umsatzdaten$Wettercode <- as.numeric(as.character(umsatzdaten$Wettercode))
@@ -198,6 +211,7 @@ View(umsatzdaten)
 #Gewitter2(91-99)
 
 ```
+
 
 
 
