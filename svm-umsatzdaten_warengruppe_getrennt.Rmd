@@ -1,0 +1,205 @@
+---
+title: "Support Vector Machine"
+output: html_notebook
+---
+
+
+## Imports
+
+```{r}
+# Importing Function Packages
+library(readr)
+library(e1071)
+library(Metrics)
+library(dplyr)
+library(ggplot2)
+```
+
+Vorhersage abspalten
+```{r}
+#Trenne das zu vorhersagende Datum wieder aus dem Datensatz
+vorhersage <- umsatzdaten[umsatzdaten$Datum==vorhersage_date, ]
+
+umsatzdaten <- umsatzdaten %>%
+  filter(!Datum==vorhersage_date)
+```
+
+
+## Aufteilung des Datensatzes in Trainings- und Testdaten
+
+```{r}
+# Zufallszähler setzen (um die zufällige Partitionierung bei jedem Durchlauf gleich zu halten)
+set.seed(1)
+
+# Zufällige Ziehung Indizes für die Zeilen des Datensatzes, die dem Traininsdatensatz zugeordnet werden
+indices_train <- sample(seq_len(nrow(umsatzdaten)), size = floor(0.80 * nrow(umsatzdaten)))
+
+# Definition des Trainings- und Testdatensatz durch Selektion bzw. Deselektion der entsprechenden Datenzeilen
+train_dataset <- train_dataset_org <- umsatzdaten[indices_train, ]
+test_dataset <- umsatzdaten[-indices_train, ]
+```
+
+
+## Data Preparation
+
+```{r}
+# Uncomment the following line to check the correctness of the code with a small (and computationally fast) training data set
+train_dataset <- sample_frac(train_dataset_org, .10)
+```
+
+
+## Training the SVM
+
+```{r}
+# Estimation of an SVM with optimized weighting parameters and given standard hyper parameters
+# Typically not used; instead, the function svm_tune is used in order to also get a model with optimized hyper parameters
+model_svm <- svm(Umsatz ~ as.factor(wochentag), train_dataset)
+```
+
+Entferne Spalten die NA enthalten
+```{r}
+train_dataset$Wettercode <- NULL
+train_dataset$Temperatur <- NULL
+train_dataset$Bewoelkung <- NULL
+train_dataset$Windgeschwindigkeit <- NULL
+```
+
+Support Vector Machine für verkleinerten Datensatz
+```{r}
+# Estimation of various SVM (each with optimized weighting parameters) using systematically varied hyper parameters (typically called 'grid search' approach) and cross validation
+# the resulting object includes the optimal model in the element named 'best.model'
+svm_tune_W1 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche, data=subset(train_dataset, Warengruppe=="1"),
+                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
+svm_tune_W2 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche, data=subset(train_dataset, Warengruppe=="2"),
+                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
+svm_tune_W3 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche, data=subset(train_dataset, Warengruppe=="3"),
+                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
+svm_tune_W4 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche, data=subset(train_dataset, Warengruppe=="4"),
+                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
+svm_tune_W5 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche, data=subset(train_dataset, Warengruppe=="5"),
+                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
+svm_tune_W6 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche, data=subset(train_dataset, Warengruppe=="6"),
+                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
+
+```
+
+Entferne Spalten die NA enthalten
+```{r}
+train_dataset_org$Wettercode <- NULL
+train_dataset_org$Temperatur <- NULL
+train_dataset_org$Bewoelkung <- NULL
+train_dataset_org$Windgeschwindigkeit <- NULL
+
+test_dataset$Wettercode <- NULL
+test_dataset$Temperatur <- NULL
+test_dataset$Bewoelkung <- NULL
+test_dataset$Windgeschwindigkeit <- NULL
+
+```
+
+Support Vector Machine für kompletten Datensatz
+```{r}
+# Estimation of various SVM (each with optimized weighting parameters) using systematically varied hyper parameters (typically called 'grid search' approach) and cross validation
+# the resulting object includes the optimal model in the element named 'best.model'
+svm_tune_W1 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche, data=subset(train_dataset_org, Warengruppe=="1"),
+                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
+svm_tune_W2 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche, data=subset(train_dataset_org, Warengruppe=="2"),
+                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
+svm_tune_W3 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche, data=subset(train_dataset_org, Warengruppe=="3"),
+                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
+svm_tune_W4 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche, data=subset(train_dataset_org, Warengruppe=="4"),
+                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
+svm_tune_W5 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche, data=subset(train_dataset_org, Warengruppe=="5"),
+                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
+svm_tune_W6 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche, data=subset(train_dataset_org, Warengruppe=="6"),
+                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
+
+
+
+```
+
+
+## Checking the Prediction Quality
+#with incomplete data set "train_dataset"
+```{r}
+# Calculating the prediction for the training data using the best model according to the grid search
+pred_train_W1 <- predict(svm_tune_W1$best.model, subset(train_dataset, Warengruppe=="1"))
+pred_train_W2 <- predict(svm_tune_W2$best.model, subset(train_dataset, Warengruppe=="1"))
+pred_train_W3 <- predict(svm_tune_W3$best.model, subset(train_dataset, Warengruppe=="1"))
+pred_train_W4 <- predict(svm_tune_W4$best.model, subset(train_dataset, Warengruppe=="1"))
+pred_train_W5 <- predict(svm_tune_W5$best.model, subset(train_dataset, Warengruppe=="1"))
+pred_train_W6 <- predict(svm_tune_W6$best.model, subset(train_dataset, Warengruppe=="1"))
+# Calculating the prediction quality for the training data using the MAPE
+mape(subset(train_dataset$Umsatz, train_dataset$Warengruppe=="1"), pred_train_W1)
+mape(subset(train_dataset$Umsatz, train_dataset$Warengruppe=="2"), pred_train_W2)
+mape(subset(train_dataset$Umsatz, train_dataset$Warengruppe=="3"), pred_train_W3)
+mape(subset(train_dataset$Umsatz, train_dataset$Warengruppe=="4"), pred_train_W4)
+mape(subset(train_dataset$Umsatz, train_dataset$Warengruppe=="5"), pred_train_W5)
+mape(subset(train_dataset$Umsatz, train_dataset$Warengruppe=="6"), pred_train_W6)
+```
+
+## Checking the Prediction Quality
+#with complete Data set "train_dataset_org"
+```{r}
+# Calculating the prediction for the training data using the best model according to the grid search
+pred_train_W1 <- predict(svm_tune_W1$best.model, subset(train_dataset_org, Warengruppe=="1"))
+pred_train_W2 <- predict(svm_tune_W2$best.model, subset(train_dataset_org, Warengruppe=="1"))
+pred_train_W3 <- predict(svm_tune_W3$best.model, subset(train_dataset_org, Warengruppe=="1"))
+pred_train_W4 <- predict(svm_tune_W4$best.model, subset(train_dataset_org, Warengruppe=="1"))
+pred_train_W5 <- predict(svm_tune_W5$best.model, subset(train_dataset_org, Warengruppe=="1"))
+pred_train_W6 <- predict(svm_tune_W6$best.model, subset(train_dataset_org, Warengruppe=="1"))
+
+# Calculating the prediction quality for the training data using the MAPE
+mape(subset(train_dataset_org$Umsatz, train_dataset_org$Warengruppe=="1"), pred_train_W1)
+mape(subset(train_dataset_org$Umsatz, train_dataset_org$Warengruppe=="2"), pred_train_W2)
+mape(subset(train_dataset_org$Umsatz, train_dataset_org$Warengruppe=="3"), pred_train_W3)
+mape(subset(train_dataset_org$Umsatz, train_dataset_org$Warengruppe=="4"), pred_train_W4)
+mape(subset(train_dataset_org$Umsatz, train_dataset_org$Warengruppe=="5"), pred_train_W5)
+mape(subset(train_dataset_org$Umsatz, train_dataset_org$Warengruppe=="6"), pred_train_W6)
+```
+
+
+
+Entferne Spalten die NA enthalten
+```{r}
+test_dataset$Wettercode <- NULL
+test_dataset$Temperatur <- NULL
+test_dataset$Bewoelkung <- NULL
+test_dataset$Windgeschwindigkeit <- NULL
+```
+
+
+```{r}
+# Calculating the prediction for the test data using the best model according to the grid search
+pred_test_W1 <- predict(svm_tune_W1$best.model, subset(test_dataset, Warengruppe=="1"))
+pred_test_W2 <- predict(svm_tune_W2$best.model, subset(test_dataset, Warengruppe=="2"))
+pred_test_W3 <- predict(svm_tune_W3$best.model, subset(test_dataset, Warengruppe=="3"))
+pred_test_W4 <- predict(svm_tune_W4$best.model, subset(test_dataset, Warengruppe=="4"))
+pred_test_W5 <- predict(svm_tune_W5$best.model, subset(test_dataset, Warengruppe=="5"))
+pred_test_W6 <- predict(svm_tune_W6$best.model, subset(test_dataset, Warengruppe=="6"))
+# Calculating the prediction quality for the training data using the MAPE
+mape(subset(test_dataset$Umsatz, test_dataset$Warengruppe=="1"), pred_test_W1)
+mape(subset(test_dataset$Umsatz, test_dataset$Warengruppe=="2"), pred_test_W2)
+mape(subset(test_dataset$Umsatz, test_dataset$Warengruppe=="3"), pred_test_W3)
+mape(subset(test_dataset$Umsatz, test_dataset$Warengruppe=="4"), pred_test_W4)
+mape(subset(test_dataset$Umsatz, test_dataset$Warengruppe=="5"), pred_test_W5)
+mape(subset(test_dataset$Umsatz, test_dataset$Warengruppe=="6"), pred_test_W6)
+```
+
+Entferne Spalten die NA enthalten
+```{r}
+vorhersage$Wettercode <- NULL
+vorhersage$Temperatur <- NULL
+vorhersage$Bewoelkung <- NULL
+vorhersage$Windgeschwindigkeit <- NULL
+```
+
+
+04.06.2019 Vorhersage 
+```{r}
+# Calculating the prediction for the prediction-date using the best model according to the grid search
+vorhersage[is.na(vorhersage)] <-0
+pred_vorhersage <- predict(svm_tune$best.model, vorhersage)
+pred_vorhersage
+```
+
