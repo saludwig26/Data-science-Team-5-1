@@ -126,6 +126,28 @@ umsatzdaten$schulferien <- !is.na(umsatzdaten$schulferien)
 rm(schulferien)
 ```
 
+
+Verkaufsoffener Sonntag oder Offene Geschäfte am Feiertag (3.10.)
+```{r}
+# OffeneSO<-tibble(Datum = as.Date(c("2013-03-03", "2013-06-02", "2013-10-06", "2013-11-03", "2014-03-30", "2014-05-10","2014-11-02","2015-03-01","2015-06-21",
+# "2015-10-03","2015-11-08","2016-03-06","2016-08-28","2016-10-02","2016-11-06","2017-03-05","2017-06-11","2017-07-16","2017-10-01","2017-11-05","2018-07-01","2018-10-07", "2018-11-04","2019-03-03","2019-10-03","2019-11-03")), OffeneSO = TRUE)
+# 
+# OffeneSO$Datum <- sort(OffeneSO$Datum)
+# umsatzdaten$OffeneSO <- TRUE
+# 
+# umsatzdaten<- left_join(umsatzdaten, OffeneSO)
+# 
+# OffeneSO$OffeneSO <- TRUE
+# 
+# #Export als CSV:
+# write.csv(OffeneSO,"OffeneSO", row.names = F)
+# read_csv(OffeneSO)
+# 
+# Juni 2014´?
+
+
+```
+
 Kieler Woche:
 ```{r}
 kiwo <- read_csv("kiwo.csv")
