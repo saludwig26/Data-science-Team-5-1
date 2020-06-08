@@ -28,7 +28,7 @@ select (class, hwy, cty) %>% filter (class=="suv") %>% mutate (mix = .5*hwy + .5
 
 
 ```
-
+JE WARENGRUPPE JE WOCHENTAG
 ```{r}
 my_Warengruppe <- umsatzdaten %>%
   group_by(Warengruppe, wochentag) %>%
@@ -41,14 +41,67 @@ my_Warengruppe <- umsatzdaten %>%
      mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
   
 
-# summarise(n(), t.test(cty,hwy)$p.value)
-head(my_Warengruppe, 200)
-
 # Confidence Interval
 ggplot(my_Warengruppe) + facet_wrap(~Warengruppe) +
   geom_bar( aes(x=wochentag, y=mean_Umsatz), stat="identity", fill="forestgreen", alpha=0.5) +
   geom_errorbar( aes(x=wochentag, ymin=mean_Umsatz-ic, ymax=mean_Umsatz+ic), width=0.3, colour="orange", alpha=0.3, size=1.5) +
   ggtitle("Confidence Interval") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+```{r}
+my_Warengruppe <- umsatzdaten %>%
+  group_by(Warengruppe, monat) %>%
+  summarise(
+    n=n(),
+    mean_Umsatz=mean(Umsatz),
+    sd_Umsatz=sd(Umsatz)
+    )%>%
+     mutate( se=sd_Umsatz/sqrt(n))  %>%
+     mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+  
+
+# Confidence Interval
+ggplot(my_Warengruppe) + facet_wrap(~Warengruppe) +
+  geom_bar( aes(x=monat, y=mean_Umsatz), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=monat, ymin=mean_Umsatz-ic, ymax=mean_Umsatz+ic), width=0.3, colour="orange", alpha=0.3, size=1.5) +
+  ggtitle("Confidence Interval") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+```{r}
+my_Warengruppe <- umsatzdaten %>%
+  group_by(Warengruppe, Temperatur_labels) %>%
+  summarise(
+    n=n(),
+    mean_Umsatz=mean(Umsatz),
+    sd_Umsatz=sd(Umsatz)
+    )%>%
+     mutate( se=sd_Umsatz/sqrt(n))  %>%
+     mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+  
+
+# Confidence Interval
+ggplot(my_Warengruppe) + facet_wrap(~Warengruppe) +
+  geom_bar( aes(x=Temperatur_labels, y=mean_Umsatz), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=Temperatur_labels, ymin=mean_Umsatz-ic, ymax=mean_Umsatz+ic), width=0.3, colour="orange", alpha=0.3, size=1.5) +
+  ggtitle("Umsatz vs Temperatur") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+```{r}
+my_Warengruppe <- umsatzdaten %>%
+  group_by(Warengruppe, sylvester) %>%
+  summarise(
+    n=n(),
+    mean_Umsatz=mean(Umsatz),
+    sd_Umsatz=sd(Umsatz)
+    )%>%
+     mutate( se=sd_Umsatz/sqrt(n))  %>%
+     mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+  
+
+# Confidence Interval
+ggplot(my_Warengruppe) + facet_wrap(~Warengruppe) +
+  geom_bar( aes(x=sylvester, y=mean_Umsatz), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=sylvester, ymin=mean_Umsatz-ic, ymax=mean_Umsatz+ic), width=0.3, colour="orange", alpha=0.3, size=1.5) +
+  ggtitle("Umsatz vs sylvester") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
 
 
@@ -85,9 +138,18 @@ ggplot(umsatzdaten) +
 ```{r}
 library(scales)
 kuchen_plot <- umsatzdaten %>%
-  select (Warengruppe, Datum, Umsatz, wochentag, holiday) %>% filter (Warengruppe=="5")
+  select (Warengruppe, Datum, Umsatz, wochentag, jahreszeit) %>% filter (Warengruppe=="2")
 ggplot(kuchen_plot) +
-  geom_line(aes(x = Datum, y = Umsatz, colour = holiday), size=0.1)  + scale_x_date(breaks = date_breaks("months"),
+  geom_point(aes(x = Datum, y = Umsatz, colour = jahreszeit), size=0.1)  + scale_x_date(breaks = date_breaks("months"),
+  labels = date_format("%b")) + theme(axis.text.x = element_text(angle = 90, size= 7, hjust = 1)) 
+```
+
+```{r}
+library(scales)
+kuchen_plot <- umsatzdaten %>%
+  select (Warengruppe, Datum, Umsatz, wochentag, sylvester) %>% filter (Warengruppe=="1")
+ggplot(kuchen_plot) +
+  geom_line(aes(x = Datum, y = Umsatz, colour = sylvester), size=0.1)  + scale_x_date(breaks = date_breaks("months"),
   labels = date_format("%b")) + theme(axis.text.x = element_text(angle = 90, size= 7, hjust = 1)) 
 ```
 
