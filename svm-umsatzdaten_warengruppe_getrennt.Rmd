@@ -137,11 +137,11 @@ svm_tune_W6 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoch
 ```{r}
 # Calculating the prediction for the training data using the best model according to the grid search
 pred_train_W1 <- predict(svm_tune_W1$best.model, subset(train_dataset, Warengruppe=="1"))
-pred_train_W2 <- predict(svm_tune_W2$best.model, subset(train_dataset, Warengruppe=="1"))
-pred_train_W3 <- predict(svm_tune_W3$best.model, subset(train_dataset, Warengruppe=="1"))
-pred_train_W4 <- predict(svm_tune_W4$best.model, subset(train_dataset, Warengruppe=="1"))
-pred_train_W5 <- predict(svm_tune_W5$best.model, subset(train_dataset, Warengruppe=="1"))
-pred_train_W6 <- predict(svm_tune_W6$best.model, subset(train_dataset, Warengruppe=="1"))
+pred_train_W2 <- predict(svm_tune_W2$best.model, subset(train_dataset, Warengruppe=="2"))
+pred_train_W3 <- predict(svm_tune_W3$best.model, subset(train_dataset, Warengruppe=="3"))
+pred_train_W4 <- predict(svm_tune_W4$best.model, subset(train_dataset, Warengruppe=="4"))
+pred_train_W5 <- predict(svm_tune_W5$best.model, subset(train_dataset, Warengruppe=="5"))
+pred_train_W6 <- predict(svm_tune_W6$best.model, subset(train_dataset, Warengruppe=="6"))
 # Calculating the prediction quality for the training data using the MAPE
 mape(subset(train_dataset$Umsatz, train_dataset$Warengruppe=="1"), pred_train_W1)
 mape(subset(train_dataset$Umsatz, train_dataset$Warengruppe=="2"), pred_train_W2)
