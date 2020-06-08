@@ -100,32 +100,34 @@ test_dataset$Windgeschwindigkeit <- NULL
 
 Support Vector Machine für kompletten Datensatz
 ```{r}
+#Cost verändert!!!!!!!!! 
+
 # Estimation of various SVM (each with optimized weighting parameters) using systematically varied hyper parameters (typically called 'grid search' approach) and cross validation
 # the resulting object includes the optimal model in the element named 'best.model'
 
 #alle ohne warmTemp, ohne dayoff_b4, TempAbweichung1
-#Warengruppe 1: am besten mit holiday und schulferien ohne sylvester 0.200038 
-svm_tune_W1 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche+monat+holiday+schulferien, data=subset(train_dataset_org, Warengruppe=="1"),
+#Warengruppe 1: am besten mit holiday und schulferien ohne sylvester&monat 0.1882389
+svm_tune_W1 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche+holiday+schulferien, data=subset(train_dataset_org, Warengruppe=="1"),
+                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 12^(2:3)))
+
+#Warengruppe 2: am besten ohne holiday& sylvester aber mit schulferien & monat 0.15564 (mit holiday 0.1646284)
+svm_tune_W2 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche +schulferien+monat, data=subset(train_dataset_org, Warengruppe=="2"),
                  ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
 
-#Warengruppe 2: am besten ohne holiday& sylvester aber mit schulferien  0.15564 (mit holiday 0.1646284)
-svm_tune_W2 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche+monat +schulferien, data=subset(train_dataset_org, Warengruppe=="2"),
-                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
-
-# Warengruppe 3: am besten mit holiday und schulferien 0.2012541
-svm_tune_W3 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche+monat+holiday+schulferien, data=subset(train_dataset_org, Warengruppe=="3"),
+# Warengruppe 3: am besten mit holiday und schulferien und monat 0.1992
+svm_tune_W3 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche+holiday+schulferien+monat, data=subset(train_dataset_org, Warengruppe=="3"),
                  ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
 
 #Warengruppe 4:am besten mit holiday  und mit schulferien ohne sylvester 0.2044578
-svm_tune_W4 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche+monat+holiday+schulferien, data=subset(train_dataset_org, Warengruppe=="4"),
+svm_tune_W4 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche+holiday+schulferien+monat, data=subset(train_dataset_org, Warengruppe=="4"),
                  ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
 
-#Warengruppe 5: am besten mit holiday und mit schulferien ohne sylvester 0.1461067
-svm_tune_W5 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche+monat+holiday+schulferien, data=subset(train_dataset_org, Warengruppe=="5"),
+#Warengruppe 5: am besten mit holiday und mit schulferien ohne sylvester  0.1426626
+svm_tune_W5 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit+ KielerWoche+ monat+holiday+schulferien, data=subset(train_dataset_org, Warengruppe=="5"),
                  ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
 #Warengruppe 6:am besten ohne holiday&sylvester aber mit schulferien 0.4107755;  
-svm_tune_W6 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche+monat+schulferien, data=subset(train_dataset_org, Warengruppe=="6"),
-                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 2^(2:3)))
+svm_tune_W6 <- tune(svm, Umsatz ~ as.factor(wochentag) + jahreszeit + KielerWoche+schulferien+monat+VerlaengertesWE_Mo+VerlaengertesWE_Fr, data=subset(train_dataset_org, Warengruppe=="6"),
+                 ranges = list(epsilon = seq(0.2,1,0.1), cost = 4^(2:3)))
 
 ```
 
