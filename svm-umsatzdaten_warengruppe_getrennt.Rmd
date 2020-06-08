@@ -211,28 +211,13 @@ vorhersage$Windgeschwindigkeit <- NULL
 04.06.2019 Vorhersage 
 ```{r}
 # Calculating the prediction for the prediction-date using the best model according to the grid search
-vorhersage[is.na(vorhersage)] <-0
-pred_vorhersage <- predict(svm_tune_W1$best.model, vorhersage)
-pred_vorhersage
-
-vorhersage[is.na(vorhersage)] <-0
-pred_vorhersage <- predict(svm_tune_W2$best.model, vorhersage)
-pred_vorhersage
-
-vorhersage[is.na(vorhersage)] <-0
-pred_vorhersage <- predict(svm_tune_W3$best.model, vorhersage)
-pred_vorhersage
-
-vorhersage[is.na(vorhersage)] <-0
-pred_vorhersage <- predict(svm_tune_W4$best.model, vorhersage)
-pred_vorhersage
-
-vorhersage[is.na(vorhersage)] <-0
-pred_vorhersage <- predict(svm_tune_W5$best.model, vorhersage)
-pred_vorhersage
-
-vorhersage[is.na(vorhersage)] <-0
-pred_vorhersage <- predict(svm_tune_W6$best.model, vorhersage)
-pred_vorhersage
+vorhersage$Umsatz <- 0
+vorhersage$Umsatz[1] <- predict(svm_tune_W1$best.model, subset(vorhersage, Warengruppe=="1"))
+vorhersage$Umsatz[2] <- predict(svm_tune_W2$best.model, subset(vorhersage, Warengruppe=="2"))
+vorhersage$Umsatz[3] <- predict(svm_tune_W3$best.model, subset(vorhersage, Warengruppe=="3"))
+vorhersage$Umsatz[4] <- predict(svm_tune_W4$best.model, subset(vorhersage, Warengruppe=="4"))
+vorhersage$Umsatz[5] <- predict(svm_tune_W5$best.model, subset(vorhersage, Warengruppe=="5"))
+vorhersage$Umsatz[6] <- predict(svm_tune_W6$best.model, subset(vorhersage, Warengruppe=="6"))
+rbind(vorhersage$Warengruppe, vorhersage$Umsatz)
 ```
 
