@@ -142,13 +142,13 @@ wetter <- read_csv("wetter.csv")
 wetter <- mutate(wetter, monat = as.factor(format(Datum, "%m")))
 
 wetter %>%
-group_by(monat) %>% summarize(mean=mean(Temperatur)) %>%  write_csv("mean_temperature.csv")
+group_by(year(Datum)) %>%group_by(monat) %>% summarize(mean=mean(Temperatur)) %>%  write_csv("mean_temperature.csv")
 
 mean_temperature <- read_csv("mean_temperature.csv")
 mean_temperature$monat <- as.factor(mean_temperature$monat)
 wetter <- left_join(wetter, mean_temperature)
 
-wetter$Temp_abweichung <- ifelse(wetter$mean - wetter$Temperatur < 5, 1, 0)
+wetter$Temp_abweichung <- ifelse(wetter$mean - wetter$Temperatur > 5, 1, 0)
 ```
 
 Einbindung Wetterdaten
@@ -183,6 +183,8 @@ Wettercode
 umsatzdaten$Wettercode <- as.numeric(as.character(umsatzdaten$Wettercode))
 umsatzdaten$Wettercode <- cut(umsatzdaten$Wettercode, breaks = c(0,14,99), labels=c("Trocken","RegenGewitter"), right=FALSE)
 
+save(umsatzdaten, file = "umsatzdaten_NN.Rda")
+
 View(umsatzdaten) 
 
 
@@ -213,6 +215,11 @@ View(umsatzdaten)
 ```
 
 
+```{r}
+umsatzdaten_vorhersage <- umsatzdaten %>%
+filter(Datum==vorhersage_date)
+View(umsatzdaten_vorhersage)
+```
 
 
 ```Overfitting with linear regression

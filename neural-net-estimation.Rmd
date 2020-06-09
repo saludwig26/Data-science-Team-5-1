@@ -107,13 +107,6 @@ model = keras.models.load_model("python_model.h5")
 
 ```
 
-```{r}
-#Bestimme das zu vorhersagende Datum und schreibe es in den Datensatz ein
-vorhersage <- as.Date("2019-06-04")
-
-umsatzdaten_norm <- rbind(umsatzdaten_norm, tibble(Datum = rep(vorhersage,6), Warengruppe = (1:6), Umsatz=NA))
-```
-
 
 ### Auswertung der Schätzergebnisse ###
 ```{r}
@@ -121,23 +114,29 @@ umsatzdaten_norm <- rbind(umsatzdaten_norm, tibble(Datum = rep(vorhersage,6), Wa
 
 train_predictions_norm <- py$model$predict(train_dataset)
 test_predictions_norm <- py$model$predict(test_dataset)
-vorhersage_predictions_norm <- py$model$predict(vorhersage)
-
 
 # Rückberechnung der normierten Umsatzschätzungen zu den tatsächlichen Umsatzschätzungen 
 train_predictions <- (train_predictions_norm * norm_values_list$sd[1] ) + norm_values_list$mean[1]
 test_predictions <- (test_predictions_norm * norm_values_list$sd[1]) + norm_values_list$mean[1]
-vorhersage_predictions <- (vorhersage_predictions_norm * norm_values_list$sd[1]) + norm_values_list$mean[1]
-# Selektion der zugehörigen tatsächlichen Umsatz
 
+# Selektion der zugehörigen tatsächlichen Umsatz
 train_actuals <- umwandlung_umsatzdaten$Umsatz[train_ind]
 test_actuals <- umwandlung_umsatzdaten$Umsatz[-train_ind]
-vorhersage_actuals <- umwandlung_umsatzdaten$Umsatz[vorhersage]
 
 # Vergleich der Gütekriterien für die Traingings- und Testdaten
 cat(paste0("MAPE on the Training Data:\t", format(mape(train_actuals, train_predictions)*100, digits=3, nsmall=2)))
 cat(paste0("\nMAPE on the Test Data:\t\t", format(mape(test_actuals, test_predictions)*100, digits=3, nsmall=2)))
 
+
+```
+
+```{r}
+# Schätzung der (normierten) Preise für die vorhersage date
+vorhersage_predictions_norm <- py$model$predict(vorhersage_dataset)
+# Rückberechnung der normierten Umsatzschätzungen zu den tatsächlichen Umsatzschätzungen 
+vorhersage_predictions <- (vorhersage_predictions_norm * norm_values_list$sd[1]) + norm_values_list$mean[1]
+# Selektion der zugehörigen tatsächlichen Umsatz
+vorhersage_actuals <- umwandlung_umsatzdaten$Umsatz[NA]
 
 ```
 

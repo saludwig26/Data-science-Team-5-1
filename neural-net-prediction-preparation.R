@@ -67,7 +67,7 @@ get.norm_values <- function (.data, select_columns = NULL) {
 
 
 
-umwandlung_umsatzdaten  <- umsatzdaten  %>%
+umwandlung_umsatzdaten  <- umsatzdaten_vorhersage  %>%
   mutate(holiday = ifelse(holiday == "TRUE", 1, 0)) %>%
   mutate(sylvester = ifelse(sylvester == "TRUE", 1, 0)) %>%
   mutate(dayoff_after = ifelse(dayoff_after == "TRUE", 1, 0)) %>%
@@ -76,14 +76,14 @@ umwandlung_umsatzdaten  <- umsatzdaten  %>%
   mutate(VerlaengertesWE_Fr = ifelse(VerlaengertesWE_Fr == "TRUE", 1, 0)) %>%
   mutate(schulferien = ifelse(schulferien == "TRUE", 1, 0)) %>%
   mutate(KielerWoche = ifelse(KielerWoche == "TRUE", 1, 0)) 
-  umwandlung_umsatzdaten$monat <- as.numeric(umsatzdaten$monat)
-  umwandlung_umsatzdaten$wochentag <- as.numeric(umsatzdaten$wochentag) 
-  umwandlung_umsatzdaten$jahreszeit <- as.numeric(umsatzdaten$jahreszeit)
-  # umwandlung_umsatzdaten$Temperatur <- as.numeric(umsatzdaten$Temperatur)
-  # umwandlung_umsatzdaten$Windgeschwindigkeit <- as.numeric(umsatzdaten$Windgeschwindigkeit)
-  # umwandlung_umsatzdaten$Wettercode <- as.numeric(umsatzdaten$Wettercode)
-  # umwandlung_umsatzdaten$warmTemp <- as.numeric(umsatzdaten$warmTemp)
-  # umwandlung_umsatzdaten$Temperatur_labels <- as.numeric(umsatzdaten$Temperatur_labels)
+umwandlung_umsatzdaten$monat <- as.numeric(umsatzdaten$monat)
+umwandlung_umsatzdaten$wochentag <- as.numeric(umsatzdaten$wochentag) 
+umwandlung_umsatzdaten$jahreszeit <- as.numeric(umsatzdaten$jahreszeit)
+# umwandlung_umsatzdaten$Temperatur <- as.numeric(umsatzdaten$Temperatur)
+# umwandlung_umsatzdaten$Windgeschwindigkeit <- as.numeric(umsatzdaten$Windgeschwindigkeit)
+# umwandlung_umsatzdaten$Wettercode <- as.numeric(umsatzdaten$Wettercode)
+# umwandlung_umsatzdaten$warmTemp <- as.numeric(umsatzdaten$warmTemp)
+# umwandlung_umsatzdaten$Temperatur_labels <- as.numeric(umsatzdaten$Temperatur_labels)
 
 
 
@@ -111,33 +111,15 @@ umsatzdaten_norm <- norm_cols(umsatzdaten_dummy, norm_values_list) # Standardisi
 ### Definition der Feature-Variablen und der Label-Variable ####
 
 # Definition der Features (der unabhängigen Variablen auf deren Basis die Vorhersagen erzeugt werden sollen)
-features = c( Warengruppe_dummies ,  wochentag_dummies, jahreszeit_dummies,  "schulferien") #, monat_dummies, jahreszeit_dummies) 
+features = c( "Warengruppe_1" ,  wochentag_dummies, jahreszeit_dummies,  "schulferien") #, monat_dummies, jahreszeit_dummies) 
 # Definition der Label-Variable (der abhaengigen Variable, die vorhergesagt werden soll) sowie
 label = 'Umsatz'
 
-#VorhersageDataset
+#Vorhersage_dataset
 vorhersage_date <- as.Date("2019-06-04")
 vorhersage_dataset = umsatzdaten_norm[umsatzdaten_norm$Datum==vorhersage_date, features]
 
-#Trenne das zu vorhersagende Datum wieder aus dem Datensatz
-umsatzdaten_norm <- umsatzdaten_norm %>%
-filter(!Datum==vorhersage_date)
-
-###################################################
-### Definition von Trainings- und Testdatensatz ####
-
-# Zufallszähler setzen, um die zufällige Partitionierung bei jedem Durchlauf gleich zu halten
-set.seed(123)
-# Bestimmung der Indizes des Traininsdatensatzes
-train_ind <- sample(seq_len(nrow(umsatzdaten_norm)), size = floor(0.8 * nrow(umsatzdaten_norm)))
-
-# Teilen in Trainings- und Testdatensatz
-train_dataset = umsatzdaten_norm[train_ind, features]
-test_dataset = umsatzdaten_norm[-train_ind, features]
 
 
-# Selektion der Variable, die als Label definiert wurde
-train_labels = umsatzdaten_norm[train_ind, label]
-test_labels = umsatzdaten_norm[-train_ind, label]
 
 
