@@ -115,13 +115,13 @@ features = c( Warengruppe_dummies ,  wochentag_dummies, jahreszeit_dummies,  "sc
 # Definition der Label-Variable (der abhaengigen Variable, die vorhergesagt werden soll) sowie
 label = 'Umsatz'
 
-#VorhersageDataset
-vorhersage_date <- as.Date("2019-06-04")
-vorhersage_dataset = umsatzdaten_norm[umsatzdaten_norm$Datum==vorhersage_date, features]
-
-#Trenne das zu vorhersagende Datum wieder aus dem Datensatz
-umsatzdaten_norm <- umsatzdaten_norm %>%
-filter(!Datum==vorhersage_date)
+# #VorhersageDataset
+# vorhersage_date <- as.Date("2019-06-04")
+# vorhersage_dataset = umsatzdaten_norm[umsatzdaten_norm$Datum==vorhersage_date, features]
+# 
+# #Trenne das zu vorhersagende Datum wieder aus dem Datensatz
+# umsatzdaten_norm <- umsatzdaten_norm %>%
+# filter(!Datum==vorhersage_date)
 
 ###################################################
 ### Definition von Trainings- und Testdatensatz ####

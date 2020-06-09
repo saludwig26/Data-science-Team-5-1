@@ -52,8 +52,8 @@ from tensorflow.keras import layers
 
 # Definition der Form des tiefen neuronalen Netzes (Deep Neural Nets)
 model = keras.Sequential([
-  layers.Dense(10, activation='relu', input_shape=[len(r.train_dataset.keys())]),
-  layers.Dense(6, activation='relu'),
+  layers.Dense(30, activation='relu', input_shape=[len(r.train_dataset.keys())]),
+  layers.Dense(20, activation='relu'),
   layers.Dense(1)
 ])
 
@@ -74,7 +74,7 @@ model.summary()
 history = model.fit(r.train_dataset, r.train_labels, epochs=150, validation_data = (r.test_dataset, r.test_labels), verbose=0)
 
 # Ggf. Speichern des geschaetzten Modells
-model.save("python_model_5pre6n.h5")
+model.save("python_model_new.h5")
 
 ```
 
@@ -103,7 +103,7 @@ ggplot(data[-1,]) +
 
 ### (Ggf.) Laden eines gespeicherten Neuronalen Netzes ###
 ```{python}
-model = keras.models.load_model("python_model_5pre6n.h5")
+model = keras.models.load_model("python_model_new.h5")
 
 ```
 
