@@ -102,7 +102,7 @@ monat_dummies= c("monat_1", "monat_2", "monat_3", "monat_4", "monat_5", "monat_6
 # Temperatur_labels_dummies= c("Temperatur_labels_1", "Temperatur_labels_2" , "Temperatur_labels_3" , "Temperatur_labels_4" , "Temperatur_labels_5", "Temperatur_labels_NA")
 
 # Standardisierung aller Feature Variablen und der Label Variable
-norm_list <- c("Umsatz", "holiday", "sylvester","dayoff_after", "dayoff_b4", "VerlaengertesWE_Mo","VerlaengertesWE_Fr", "schulferien", "KielerWoche",  wochentag_dummies, jahreszeit_dummies, monat_dummies, Warengruppe_dummies) # Liste aller Variablen Windgeschwindigkeit_dummies, Wettercode_dummies, Temperatur_labels_dummies, "Bewoelkung", "Temperatur", "mean", "Temp_abweichung", "warmTemp",
+norm_list <- c( "Umsatz" ,"holiday", "sylvester","dayoff_after", "dayoff_b4", "VerlaengertesWE_Mo","VerlaengertesWE_Fr", "schulferien", "KielerWoche",  wochentag_dummies, jahreszeit_dummies, monat_dummies, Warengruppe_dummies) # Liste aller Variablen Windgeschwindigkeit_dummies, Wettercode_dummies, Temperatur_labels_dummies, "Bewoelkung", "Temperatur", "mean", "Temp_abweichung", "warmTemp",
 
 norm_values_list <- get.norm_values(umsatzdaten_dummy, norm_list)    # Berechnung der Mittelwerte und Std.-Abw. der Variablen
 umsatzdaten_norm <- norm_cols(umsatzdaten_dummy, norm_values_list) # Standardisierung der Variablen
@@ -111,7 +111,7 @@ umsatzdaten_norm <- norm_cols(umsatzdaten_dummy, norm_values_list) # Standardisi
 ### Definition der Feature-Variablen und der Label-Variable ####
 
 # Definition der Features (der unabhängigen Variablen auf deren Basis die Vorhersagen erzeugt werden sollen)
-features = c( Warengruppe_dummies ,  wochentag_dummies, jahreszeit_dummies,  "schulferien") #, monat_dummies, jahreszeit_dummies) 
+features = c( Warengruppe_dummies ,  wochentag_dummies, jahreszeit_dummies,  "schulferien", "KielerWoche", "holiday", "monat", "sylvester") #, monat_dummies, jahreszeit_dummies) 
 # Definition der Label-Variable (der abhaengigen Variable, die vorhergesagt werden soll) sowie
 label = 'Umsatz'
 

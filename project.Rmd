@@ -106,7 +106,7 @@ rm(dayoff_after)
 rm(dayoff_b4)
 rm(missing_dates)
 rm(all_dates)
-# 
+
 # View(umsatzdaten)
 ```
 
@@ -124,6 +124,24 @@ schulferien$Datum <- as.Date(schulferien$Datum)
 umsatzdaten <- left_join(umsatzdaten, schulferien)
 umsatzdaten$schulferien <- !is.na(umsatzdaten$schulferien)
 rm(schulferien)
+```
+
+
+Verkaufsoffener Sonntag oder Offene Geschäfte am Feiertag (3.10.)
+```{r}
+OffeneSO<-tibble(Datum = as.Date(c("2013-03-03", "2013-06-02", "2013-10-06", "2013-11-03", "2014-03-30", "2014-05-10","2014-11-02","2015-03-01","2015-06-21",
+"2015-10-03","2015-11-08","2016-03-06","2016-08-28","2016-10-02","2016-11-06","2017-03-05","2017-06-11","2017-07-16","2017-10-01","2017-11-05","2018-07-01","2018-10-07", "2018-11-04","2019-03-03","2019-10-03","2019-11-03")), OffeneSO = TRUE)
+
+OffeneSO$Datum <- sort(OffeneSO$Datum)
+#umsatzdaten$OffeneSO <- NULL
+
+umsatzdaten<- left_join(umsatzdaten, OffeneSO)
+umsatzdaten$OffeneSO <- !is.na(umsatzdaten$OffeneSO)
+
+
+# Juni 2014´?
+
+
 ```
 
 Kieler Woche:
@@ -156,8 +174,6 @@ Einbindung Wetterdaten
 library(readr)
 library(dplyr)
 
-#wetter <- read_csv("wetter.csv")
-
 wetter[is.na(wetter)] <-0
 str(wetter)
 
@@ -166,11 +182,9 @@ umsatzdaten<- left_join(umsatzdaten, wetter)
 #warm (TRUE) oder kalt (FALSE)
 umsatzdaten$warmTemp<-ifelse(umsatzdaten$Temperatur > 18,TRUE,FALSE)
 
-
 ## Umformen der numerischen Variable Windgeschwindigkeit in Faktorvariabel 
 umsatzdaten$Windgeschwindigkeit <- cut(umsatzdaten$Windgeschwindigkeit, breaks = c(0,10.7,20.7,37), labels=c("Brise", "Wind","Sturm"), right=FALSE)
 umsatzdaten$Windgeschwindigkeit[1:10]
-
 
 ## Umformen der numerischen Variable Temperatur
 umsatzdaten$Temperatur <- as.numeric(as.character(umsatzdaten$Temperatur))
@@ -183,6 +197,7 @@ Wettercode
 umsatzdaten$Wettercode <- as.numeric(as.character(umsatzdaten$Wettercode))
 umsatzdaten$Wettercode <- cut(umsatzdaten$Wettercode, breaks = c(0,14,99), labels=c("Trocken","RegenGewitter"), right=FALSE)
 
+<<<<<<< HEAD
 save(umsatzdaten, file = "umsatzdaten_NN.Rda")
 
 View(umsatzdaten) 
@@ -222,6 +237,10 @@ View(umsatzdaten_vorhersage)
 ```
 
 
+=======
+```
+
+>>>>>>> 597295332ae05de99fed129f269c2d7363e75e75
 ```Overfitting with linear regression
 Importing Function Packages
 
@@ -235,7 +254,6 @@ library(Metrics)
 
 Datensatz in Training und Test Data teilen
 https://duttashi.github.io/blog/splitting-a-data-frame-into-training-and-testing-sets-in-r/
-
 
 ```{r}
 # library(caTools)
@@ -288,17 +306,16 @@ mod7 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ T
 mod8 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+Windgeschwindigkeit+dayoff_after+dayoff_b4, umsatzdaten)
 mod9 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+Windgeschwindigkeit+dayoff_after+dayoff_b4+jahreszeit, umsatzdaten)
 mod10 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+Windgeschwindigkeit+dayoff_after+dayoff_b4+jahreszeit+Bewoelkung, umsatzdaten)
-<<<<<<< HEAD
 mod11 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+Windgeschwindigkeit+dayoff_after+dayoff_b4+jahreszeit+Bewoelkung+holiday, umsatzdaten)
 mod12 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+Windgeschwindigkeit+dayoff_after+dayoff_b4+jahreszeit+Bewoelkung+holiday+dayoff_after_holiday, umsatzdaten)
 mod13 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+Windgeschwindigkeit+dayoff_after+dayoff_b4+jahreszeit+Bewoelkung+holiday+dayoff_after_holiday+dayoff_b4_holiday, umsatzdaten)
 
-mod6 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+holiday, umsatzdaten) 
+mod14 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+holiday, umsatzdaten) 
 #mod7 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+holiday+as.factor(jahreszeit), umsatzdaten) #Fehler
 
-mod8 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+holiday+Bewoelkung, umsatzdaten) 
+mod15 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+holiday+Bewoelkung, umsatzdaten) 
 
-mod9  <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+holiday+Bewoelkung+as.logical(dayoff_after)+ as.logical(dayoff_b4) + schulferien, umsatzdaten) 
+mod16 <- lm(Umsatz ~ as.factor(Warengruppe)+ as.factor(wochentag)+ KielerWoche+ Temperatur+holiday+Bewoelkung+as.logical(dayoff_after)+ as.logical(dayoff_b4) + schulferien, umsatzdaten) 
 ```
 
 
@@ -316,12 +333,9 @@ summary(mod7)
 summary(mod8)
 summary(mod9)
 summary(mod10)
-<<<<<<< HEAD
 summary(mod11)
 summary(mod12)
 summary(mod13)
-=======
->>>>>>> baf365bd4af70a91a8c5d67bd1c199029bd948eb
 ```
 
 ```{r}
@@ -351,13 +365,13 @@ rbind(mae(train$Umsatz, predict(mod1)),
 
 Model Prediction Quality for the Training Data Using the Mean Absolute Percentage Error
 ```{r}
-rbind(mape(house_pricing_train$price, predict(mod1)),
-      mape(house_pricing_train$price, predict(mod2)),
-      mape(house_pricing_train$price, predict(mod3)),
-      mape(house_pricing_train$price, predict(mod4)),
-      mape(house_pricing_train$price, predict(mod5)),
-      mape(house_pricing_train$price, predict(mod6)),
-      mape(house_pricing_train$price, predict(mod7)))
+rbind(mape(umsatzdaten$Umsatz, predict(mod1)),
+      mape(umsatzdaten$Umsatz, predict(mod2)),
+      mape(umsatzdaten$Umsatz, predict(mod3)),
+      mape(umsatzdaten$Umsatz, predict(mod4)),
+      mape(umsatzdaten$Umsatz, predict(mod5)),
+      mape(umsatzdaten$Umsatz, predict(mod6)),
+      mape(umsatzdaten$Umsatz, predict(mod7)))
 
 rbind(mape(train$Umsatz, predict(mod1)),
       mape(train$Umsatz, predict(mod2)),
@@ -381,330 +395,12 @@ rbind(mape(test$Umsatz, predict(mod1, newdata=test)),
 
       
    
-#rbind(mape(house_pricing_test$price, predict(mod1, newdata=house_pricing_test)),
-#      mape(house_pricing_test$price, predict(mod2, newdata=house_pricing_test)),
- #     mape(house_pricing_test$price, predict(mod3, newdata=house_pricing_test)),
-  #    mape(house_pricing_test$price, predict(mod4, newdata=house_pricing_test)),
-   #   mape(house_pricing_test$price, predict(mod5, newdata=house_pricing_test)),
-    #  mape(house_pricing_test$price, predict(mod6, newdata=house_pricing_test)),
-     # mape(house_pricing_test$price, predict(mod7, newdata=house_pricing_test)))
+#rbind(mape(umsatzdaten_test$Umsatz, predict(mod1, newdata=house_pricing_test)),
+#      mape(umsatzdaten_test$Umsatz, predict(mod2, newdata=house_pricing_test)),
+ #     mape(umsatzdaten_test$Umsatz, predict(mod3, newdata=house_pricing_test)),
+  #    mape(umsatzdaten_test$Umsatz, predict(mod4, newdata=house_pricing_test)),
+   #   mape(umsatzdaten_test$Umsatz, predict(mod5, newdata=house_pricing_test)),
+    #  mape(umsatzdaten_test$Umsatz, predict(mod6, newdata=house_pricing_test)),
+     # mape(umsatzdaten_test$Umsatz, predict(mod7, newdata=house_pricing_test)))
 
 ```
-
-
-#TO DO
-Estimation of Neural Net Data Preparation
-### Vorbereitung der Umgebung ###
-```{r}
-# Falls nicht installiert ggf. ausausführen
-#install.packages("fastDummies")
-
-# Umgebungsvariablen löschen
-remove(list = ls())
-
-# Einbinden benötigter Funktionsbibliotheken
-library(readr)
-library(fastDummies)
-
-```
-
-
-#TO DO
-### Funktionsdefinitionen ###
-
-```{r}
-#' Title Fast creation of normalized variables
-#' Quickly create normalized columns from numeric type columns in the input data. This function is useful for statistical analysis when you want normalized columns rather than the actual columns.
-#'
-#' @param .data An object with the data set you want to make normalized columns from.
-#' @param norm_values Dataframe of column names, means, and standard deviations that is used to create corresponding normalized variables from.
-#'
-#' @return A data.frame (or tibble or data.table, depending on input data type) with same number of rows an dcolumns as the inputted data, only with normalized columns for the variables indicated in the norm_values argument.
-#' @export
-#'
-#' @examples
-norm_cols <- function (.data, norm_values = NULL) {
-  for (i in 1:nrow(norm_values)  ) {
-    .data[[norm_values$name[i]]] <- (.data[[norm_values$name[i]]] - norm_values$mean[i]) / norm_values$sd[i]
-  }
-  return (.data)
-}
-
-
-#' Title Creation of a Dataframe including the Information to Standardize Variables
-#' This function is meant to be used in combination with the function norm_cols
-#'
-#' @param .data A data set including the variables you want to get the means and standard deviations from.
-#' @param select_columns A vector with a list of variable names for which you want to get the means and standard deviations from.
-#'
-#' @return A data.frame (or tibble or data.table, depending on input data type) including the names, means, and standard deviations of the variables included in the select_columns argument.
-#' @export
-#'
-#' @examples
-get.norm_values <- function (.data, select_columns = NULL) {
-  result <- NULL
-  for (col_name in select_columns) {
-    mean <- mean(.data[[col_name]], na.rm = TRUE)
-    sd <- sd(.data[[col_name]], na.rm = TRUE)
-    result <- rbind (result, c(mean, sd))
-  }
-  result <- as.data.frame(result, stringsAsFactors = FALSE)
-  result <- data.frame (select_columns, result, stringsAsFactors = FALSE)
-  names(result) <- c("name", "mean", "sd")
-  return (result)
-}
-
-```
-
-#TO DO
-### Datenaufbereitung ###
-
-```{r}
-# Rekodierung von kategoriellen Variablen (zu Dummy-Variablen)
-dummy_list <- c("view", "condition")
-house_pricing_dummy = dummy_cols(house_pricing, dummy_list)
-
-# Definition von Variablenlisten für die Dummies, um das Arbeiten mit diesen zu erleichtern
-condition_dummies = c('condition_1', 'condition_2', 'condition_3', 'condition_4', 'condition_5')
-view_dummies = c('view_0', 'view_1', 'view_2', 'view_3','view_4')
-
-
-# Standardisierung aller Feature Variablen und der Label Variable
-norm_list <- c("price", "sqft_lot", "bathrooms", "grade", "waterfront", view_dummies, condition_dummies) # Liste aller Variablen
-norm_values_list <- get.norm_values(house_pricing_dummy, norm_list)    # Berechnung der Mittelwerte und Std.-Abw. der Variablen
-house_pricing_norm <- norm_cols(house_pricing_dummy, norm_values_list) # Standardisierung der Variablen
-```
-
-#TO DO
-### Definition der Feaure-Variablen und der Label-Variable
-```{r}
-# Definition der Features (der unabhängigen Variablen auf deren Basis die Vorhersagen erzeugt werden sollen)
-features = c('sqft_lot', 'waterfront', 'grade', 'bathrooms', view_dummies, condition_dummies)
-# Definition der Label-Variable (der abhaengigen Variable, die vorhergesagt werden soll) sowie
-label = 'price_norm'
-```
-
-#TO DO
-### Definition von Trainings- und Testdatensatz ###
-```{r}
-# Zufallszähler setzen, um die zufällige Partitionierung bei jedem Durchlauf gleich zu halten
-set.seed(1)
-# Bestimmung der Indizes des Traininsdatensatzes
-train_ind <- sample(seq_len(nrow(house_pricing_norm)), size = floor(0.80 * nrow(house_pricing_norm)))
-
-# Teilen in Trainings- und Testdatensatz
-train_dataset = house_pricing_norm[train_ind, features]
-test_dataset = house_pricing_norm[-train_ind, features]
-
-# Selektion der Variable, die als Label definiert wurde
-train_labels = house_pricing_norm[train_ind, label]
-test_labels = house_pricing_norm[-train_ind, label]
-
-
-```
-
-
-```{r}
-#Ignore!
-#Abweichung der Temperatur von der durchschnittstemperatur in dem jeweiligen Monat
-# First we filter the year 2013
-umsatzdaten_y13 <- umsatzdaten[which(year(umsatzdaten$Datum) == 2013),]
-# Now we add a column with the month
-# Check the "Read date and time variables" and the "mutate" tutorials
-umsatzdaten_y13 <- mutate(umsatzdaten_y13, Month = factor(format(Datum, "%m")))
-#str(umsatzdaten_y13)
-View(umsatzdaten_y13)
-
-umsatzdaten_2013 <-    
-    group_by(umsatzdaten_y13, Month) %>% 
-    summarise(Month_avg = mean (Temperatur))
-
-View(umsatzdaten_2013)
-
-# First we filter the year 2013
-umsatzdaten_y14 <- umsatzdaten[which(year(umsatzdaten$Datum) == 2014),]
-
-# Now we add a column with the month
-# Check the "Read date and time variables" and the "mutate" tutorials
-umsatzdaten_y14 <- mutate(umsatzdaten_y14, Month = factor(format(Datum, "%m")))
-#str(umsatzdaten_y14)
-View(umsatzdaten_y14)
-
-umsatzdaten_2014 <-    
-    group_by(umsatzdaten_y14, Month) %>% 
-    summarise(Month_avg = mean (Temperatur))
-
-View(umsatzdaten_2014)
-
-
-# First we filter the year 2013
-umsatzdaten_y15 <- umsatzdaten[which(year(umsatzdaten$Datum) == 2015),]
-
-# Now we add a column with the month
-# Check the "Read date and time variables" and the "mutate" tutorials
-umsatzdaten_y15 <- mutate(umsatzdaten_y15, Month = factor(format(Datum, "%m")))
-#str(umsatzdaten_y15)
-View(umsatzdaten_y15)
-
-umsatzdaten_2015 <-    
-    group_by(umsatzdaten_y15, Month) %>% 
-    summarise(Month_avg = mean (Temperatur))
-
-View(umsatzdaten_2015)
-
-
-
-# First we filter the year 2016
-umsatzdaten_y16 <- umsatzdaten[which(year(umsatzdaten$Datum) == 2016),]
-
-# Now we add a column with the month
-# Check the "Read date and time variables" and the "mutate" tutorials
-umsatzdaten_y16 <- mutate(umsatzdaten_y16, Month = factor(format(Datum, "%m")))
-#str(umsatzdaten_y16)
-View(umsatzdaten_y16)
-
-umsatzdaten_2016 <-    
-    group_by(umsatzdaten_y16, Month) %>% 
-    summarise(Month_avg = mean (Temperatur))
-
-View(umsatzdaten_2016)
-
-
-
-
-# First we filter the year 2017
-umsatzdaten_y17 <- umsatzdaten[which(year(umsatzdaten$Datum) == 2017),]
-
-# Now we add a column with the month
-# Check the "Read date and time variables" and the "mutate" tutorials
-umsatzdaten_y17 <- mutate(umsatzdaten_y17, Month = factor(format(Datum, "%m")))
-#str(umsatzdaten_y17)
-View(umsatzdaten_y17)
-
-umsatzdaten_2017 <-    
-    group_by(umsatzdaten_y17, Month) %>% 
-    summarise(Month_avg = mean (Temperatur))
-
-View(umsatzdaten_2017)
-
-
-umsatzdaten_y18 <- umsatzdaten[which(year(umsatzdaten$Datum) == 2018),]
-
-# Now we add a column with the month
-# Check the "Read date and time variables" and the "mutate" tutorials
-umsatzdaten_y18 <- mutate(umsatzdaten_y18, Month = factor(format(Datum, "%m")))
-#str(umsatzdaten_y18)
-View(umsatzdaten_y18)
-
-umsatzdaten_2018 <-    
-    group_by(umsatzdaten_y18, Month) %>% 
-    summarise(Month_avg = mean (Temperatur))
-
-View(umsatzdaten_2018)
-
-umsatzdaten_y19 <- umsatzdaten[which(year(umsatzdaten$Datum) == 2019),]
-
-# Now we add a column with the month
-# Check the "Read date and time variables" and the "mutate" tutorials
-umsatzdaten_y19 <- mutate(umsatzdaten_y19, Month = factor(format(Datum, "%m")))
-#str(umsatzdaten_y19)
-View(umsatzdaten_y19)
-
-umsatzdaten_2019 <-    
-    group_by(umsatzdaten_y19, Month) %>% 
-    summarise(Month_avg = mean (Temperatur))
-
-View(umsatzdaten_2019)
-
-#Difference für Abweichung
-
-
-
-
-
-
-umsatzdaten_y13$Value <- 2
-
-# Now we group by the month column
-umsatzdaten <- group_by(umsatzdaten_y13, Month)
-summarize(umsatzdaten, Temperatur1 = mean(Temperatur))
-
-
-umsatzdaten_y13 <- mean(umsatzdaten_y13$Temperatur if umsatzdaten_y13$Month == 7)
-library(dplyr)
-
-umsatzdaten_y13 %>% 
-group_by(Month) %>% 
-  summarize(m = mean(umsatzdaten_y13$Temperatur)
-  mutate(mean(as.numeric(umsatzdaten_y13$Temperatur)))
-  ###
-  
- umsatzdaten_y13  <- umsatzdaten_y13  %>%  
-    group_by(Month) %>% 
-    mutate(MonthAve= mean (Temperatur)) 
-  
- 
-View(umsatzdaten_y13)
-summarize(m = mean(speed))
-
-
-library(dplyr)
-
-AbweiDurch<- umsatzdaten %>% 
-    group_by(Month = format(as.Date(Datum), '%b-%Y')) %>%
-    mean(umsatzdaten$Temperatur), )
-View(umsatzdaten) 
-
-umsatzdaten$Temperatur1<-mean(as.numeric(umsatzdaten$Temperatur)
-
-AbweiDurch<- umsatzdaten %>% 
-    group_by(Month = format(as.Date(Datum), '%b-%Y')) %>%
-    mean(umsatzdaten$Temperatur), )
-
-library(data.table)
-setDT(umsatzdaten)[,lapply(.SD, function(x) if(length(na.omit(x)) >=15)
-       mean(x, na.rm=TRUE) else NA_real_) ,
-             by = .(Month= format(as.IDate(Datum), '%b-%Y'))]
-
-
-AbweiDurch<- umsatzdaten %>% 
-    group_by(Month = format(as.Date(Datum), '%b-%Y')) %>%
-    mean(Temperatur, trim = 0, na.rm=FALSE)
-
-library(dplyr)
-library(lubridate)
-umsatzdaten  %>% group_by(year(=floor_date(date(), "year")) %>%
-   summarize(Temperatur1=sum(Temperatur))
-str(umsatzdaten)
-
-library(dplyr)
-
-AbweiDurch<- umsatzdaten %>% 
-    group_by(Month = format(as.Date(Datum), '%b-%Y')) %>%
-    mean(umsatzdaten$Temperatur), )
-View(umsatzdaten) 
-
-umsatzdaten$Temperatur1<-mean(as.numeric(umsatzdaten$Temperatur)
-
-AbweiDurch<- umsatzdaten %>% 
-    group_by(Month = format(as.Date(Datum), '%b-%Y')) %>%
-    mean(umsatzdaten$Temperatur), )
-
-library(data.table)
-setDT(umsatzdaten)[,lapply(.SD, function(x) if(length(na.omit(x)) >=15)
-       mean(x, na.rm=TRUE) else NA_real_) ,
-             by = .(Month= format(as.IDate(Datum), '%b-%Y'))]
-
-
-AbweiDurch<- umsatzdaten %>% 
-    group_by(Month = format(as.Date(Datum), '%b-%Y')) %>%
-    mean(Temperatur, trim = 0, na.rm=FALSE)
-
-library(dplyr)
-library(lubridate)
-umsatzdaten  %>% group_by(year(=floor_date(date(), "year")) %>%
-   summarize(Temperatur1=sum(Temperatur))
-str(umsatzdaten)
-=======
-```
-
